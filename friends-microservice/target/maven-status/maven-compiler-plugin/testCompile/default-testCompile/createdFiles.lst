@@ -1,0 +1,6 @@
+com\friends\demo\repository\UserRepositoryTest.class
+com\friends\demo\repository\HistoryRepositoryTest.class
+com\friends\demo\repository\FriendRepositoryTest.class
+com\friends\demo\service\FriendsServiceTest.class
+com\friends\demo\database\BuildingPostgresqlContainer.class
+com\friends\demo\repository\StatusRepositoryTest.class

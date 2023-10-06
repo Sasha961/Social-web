@@ -1,0 +1,123 @@
+spring:
+  profiles: default
+
+server:
+  port: 8087
+
+eureka:
+  instance:
+    hostname: default-eureka-server
+  client:
+    fetch-registry: false
+    register-with-eureka: false
+    serviceUrl:
+      defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka/
+
+management:
+  info:
+    env:
+      enabled: true
+    os:
+      enabled: true
+    java:
+      enabled: true
+    build:
+      enabled: true
+    git:
+      enabled: true
+
+---
+
+spring:
+  profiles: eureka-1
+  application:
+    name: eureka-clustered
+
+server:
+  port: 9001
+
+eureka:
+  instance:
+    hostname: eureka-server
+  client:
+    fetchRegistry: true
+    registerWithEureka: true
+    serviceUrl:
+      defaultZone: http://eureka-server-2:9002/eureka/,http://eureka-server-3:9003/eureka/
+
+management:
+  info:
+    env:
+      enabled: true
+    os:
+      enabled: true
+    java:
+      enabled: true
+    build:
+      enabled: true
+    git:
+      enabled: true
+
+---
+
+spring:
+  profiles: eureka-2
+  application:
+    name: eureka-clustered
+
+server:
+  port: 9002
+
+eureka:
+  instance:
+    hostname: eureka-server-2
+  client:
+    fetch-registry: true
+    register-with-eureka: true
+    serviceUrl:
+      defaultZone: http://eureka-server:9001/eureka/,http://eureka-server-3:9003/eureka/
+
+management:
+  info:
+    env:
+      enabled: true
+    os:
+      enabled: true
+    java:
+      enabled: true
+    build:
+      enabled: true
+    git:
+      enabled: true
+
+---
+
+spring:
+  profiles: eureka-3
+  application:
+    name: eureka-clustered
+
+server:
+  port: 9003
+
+eureka:
+  instance:
+    hostname: eureka-server-3
+  client:
+    fetch-registry: true
+    register-with-eureka: true
+    serviceUrl:
+      defaultZone: http://eureka-server:9001/eureka/,http://eureka-server-2:9002/eureka/
+
+management:
+  info:
+    env:
+      enabled: true
+    os:
+      enabled: true
+    java:
+      enabled: true
+    build:
+      enabled: true
+    git:
+      enabled: true

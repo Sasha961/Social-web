@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.20.xsd
+                        http://www.liquibase.org/xml/ns/dbchangelog
+                        http://www.liquibase.org/xml/ns/dbchangelog-ext">
+    <include file="07-02-changelog-create-changeset-genre-table.xml" relativeToChangelogFile="true"/>
+    <include file="09-01-changelog-insert-into-users.xml" relativeToChangelogFile="true"/>
+
+
+
+
+</databaseChangeLog>

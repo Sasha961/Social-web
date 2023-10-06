@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+    <changeSet author="ereme (generated)" id="1692786286159-1">
+        <createSequence sequenceName="friends_id_seq"/>
+    </changeSet>
+    <changeSet author="ereme (generated)" id="1692786286159-2">
+        <createSequence sequenceName="friends_id_seq1"/>
+    </changeSet>
+    <changeSet author="ereme (generated)" id="1692786286159-3">
+        <createSequence sequenceName="friends_id_seq2"/>
+    </changeSet>
+    <changeSet author="ereme (generated)" id="1692786286159-4">
+        <createSequence sequenceName="friends_id_seq3"/>
+    </changeSet>
+    <changeSet author="ereme (generated)" id="1692786286159-5">
+        <createSequence sequenceName="history_id_seq"/>
+    </changeSet>
+    <changeSet author="ereme (generated)" id="1692786286159-6">
+        <createSequence sequenceName="history_id_seq1"/>
+    </changeSet>
+    <changeSet author="ereme (generated)" id="1692786286159-7">
+        <createSequence sequenceName="history_id_seq2"/>
+    </changeSet>
+    <changeSet author="ereme (generated)" id="1692786286159-8">
+        <createSequence sequenceName="history_id_seq3"/>
+    </changeSet>
+    <changeSet author="ereme (generated)" id="1692786286159-9">
+        <createSequence sequenceName="status_id_seq"/>
+    </changeSet>
+    <changeSet author="ereme (generated)" id="1692786286159-10">
+        <createSequence sequenceName="status_id_seq1"/>
+    </changeSet>
+    <changeSet author="ereme (generated)" id="1692786286159-11">
+        <createSequence sequenceName="status_id_seq2"/>
+    </changeSet>
+    <changeSet author="ereme (generated)" id="1692786286159-12">
+        <createSequence sequenceName="status_id_seq3"/>
+    </changeSet>
+    <changeSet author="ereme (generated)" id="1692786286159-13">
+        <createSequence sequenceName="users_id_seq"/>
+    </changeSet>
+    <changeSet author="ereme (generated)" id="1692786286159-14">
+        <createSequence sequenceName="users_id_seq1"/>
+    </changeSet>
+    <changeSet author="ereme (generated)" id="1692786286159-15">
+        <createSequence sequenceName="users_id_seq2"/>
+    </changeSet>
+    <changeSet author="ereme (generated)" id="1692786286159-16">
+        <createSequence sequenceName="users_id_seq3"/>
+    </changeSet>
+    <changeSet author="ereme (generated)" id="1692786286159-17">
+        <createTable tableName="friends">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="friends_pkey"/>
+            </column>
+            <column name="user_id" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="ereme (generated)" id="1692786286159-18">
+        <createTable tableName="history">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="history_pkey"/>
+            </column>
+            <column name="event" type="INT"/>
+            <column name="user_id" type="INT"/>
+            <column name="users_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="ereme (generated)" id="1692786286159-19">
+        <createTable tableName="status">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="status_pkey"/>
+            </column>
+            <column name="deleted" type="BOOL">
+                <constraints nullable="false"/>
+            </column>
+            <column name="previous_status_code" type="INT"/>
+            <column name="status" type="INT"/>
+            <column name="user_id1" type="VARCHAR(255)"/>
+            <column name="user_id2" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="ereme (generated)" id="1692786286159-20">
+        <createTable tableName="users">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="users_pkey"/>
+            </column>
+            <column name="identification_id" type="VARCHAR(255)"/>
+            <column name="rating" type="INT"/>
+            <column name="user_id" type="VARCHAR(255)"/>
+            <column name="friends_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="ereme (generated)" id="1692786286159-21">
+        <addForeignKeyConstraint baseColumnNames="friends_id" baseTableName="users" constraintName="fkc5chrt0bpfyihapgjhbhrmics" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="friends"/>
+    </changeSet>
+    <changeSet author="ereme (generated)" id="1692786286159-22">
+        <addForeignKeyConstraint baseColumnNames="users_id" baseTableName="history" constraintName="fknscgroi3dbwwi0b6faf9m2k9q" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="users"/>
+    </changeSet>
+</databaseChangeLog>

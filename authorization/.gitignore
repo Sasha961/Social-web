@@ -1,0 +1,42 @@
+HELP.md
+target/
+!.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+build/
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+### VS Code ###
+.vscode/
+/src/main/resources/secrets.properties
+C:\java\javapro_team39\auth_microservice\deploy.md
+C:/java/javapro_team39/auth_microservice/deploy.md
+/.mvn/
+/jwt-how-to/
+/deploiment-artefacts-to-nexus/
+/build-and-run-app-in-Docker/
+/kafka-installation/
+/draft/

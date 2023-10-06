@@ -1,0 +1,51 @@
+server:
+  port: 8083
+
+spring.jpa:
+  hibernate:
+    ddl-auto: none
+
+spring:
+  application:
+    name: FRIENDS
+  datasource:
+    spring.jpa.database-platform: org.hibernate.dialect.PostgreSQLDialect
+    driverClassName: org.postgresql.Driver
+    url: jdbc:postgresql://5.63.154.191:5432/friends
+    username: selectel
+    password: selectel
+
+liquibase:
+  enabled: true
+  context: dev
+
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://5.63.154.191:8087/eureka
+  instance:
+    hostname: 5.63.154.191
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  info:
+    env:
+      enabled: true
+    os:
+      enabled: true
+    java:
+      enabled: true
+    build:
+      enabled: true
+    git:
+      enabled: true
+
+info:
+  organization: SkillBox
+  description: Spring boot project
+  name: FRIENDS
