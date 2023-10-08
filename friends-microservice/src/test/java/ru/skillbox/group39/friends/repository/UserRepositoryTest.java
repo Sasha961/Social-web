@@ -1,7 +1,10 @@
 package ru.skillbox.group39.friends.repository;
 
+import org.springframework.boot.test.mock.mockito.MockBean;
 import ru.skillbox.group39.friends.database.BuildingPostgresqlContainer;
 
+import ru.skillbox.group39.friends.kafka.KafkaConsumer;
+import ru.skillbox.group39.friends.kafka.KafkaProducer;
 import ru.skillbox.group39.friends.model.Users;
 import org.junit.After;
 import org.junit.Before;
@@ -31,6 +34,10 @@ public class UserRepositoryTest {
     @Container
     public static PostgreSQLContainer<BuildingPostgresqlContainer> postgreSQLContainer = BuildingPostgresqlContainer.getInstance();
 
+    @MockBean
+    private KafkaConsumer kafkaConsumer;
+    @MockBean
+    private KafkaProducer kafkaProducer;
     @Autowired
     UserRepository userRepository;
 

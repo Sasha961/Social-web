@@ -1,7 +1,10 @@
 package ru.skillbox.group39.friends.service;
 
+import org.springframework.boot.test.mock.mockito.MockBean;
 import ru.skillbox.group39.friends.database.BuildingPostgresqlContainer;
 import ru.skillbox.group39.friends.dto.friend.FriendShortDto;
+import ru.skillbox.group39.friends.kafka.KafkaConsumer;
+import ru.skillbox.group39.friends.kafka.KafkaProducer;
 import ru.skillbox.group39.friends.service.impl.FriendsServiceImpl;
 import ru.skillbox.group39.friends.dto.enums.StatusCode;
 import ru.skillbox.group39.friends.dto.CountDto;
@@ -20,7 +23,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.testcontainers.containers.PostgreSQLContainer;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,8 +34,12 @@ public class FriendsServiceTest {
     @ClassRule
     public static PostgreSQLContainer<BuildingPostgresqlContainer> postgreSQLContainer = BuildingPostgresqlContainer.getInstance();
 
+    @MockBean
+    private KafkaConsumer kafkaConsumer;
+    @MockBean
+    private KafkaProducer kafkaProducer;
     @Autowired
-    FriendsServiceImpl friendsService;
+    private FriendsServiceImpl friendsService;
 
     @Autowired
     private UserRepository userRepository;
@@ -44,6 +50,7 @@ public class FriendsServiceTest {
 
     @Before
     public void setUp() {
+
 
         Status status = Status.builder()
                 .status(StatusCode.NONE)

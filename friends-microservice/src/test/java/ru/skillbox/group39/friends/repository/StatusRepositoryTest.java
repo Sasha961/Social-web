@@ -1,7 +1,10 @@
 package ru.skillbox.group39.friends.repository;
 
+import org.springframework.boot.test.mock.mockito.MockBean;
 import ru.skillbox.group39.friends.database.BuildingPostgresqlContainer;
 import ru.skillbox.group39.friends.dto.enums.StatusCode;
+import ru.skillbox.group39.friends.kafka.KafkaConsumer;
+import ru.skillbox.group39.friends.kafka.KafkaProducer;
 import ru.skillbox.group39.friends.model.Status;
 import org.junit.Before;
 import org.junit.ClassRule;
@@ -28,6 +31,10 @@ public class StatusRepositoryTest {
     @Container
     public static PostgreSQLContainer<BuildingPostgresqlContainer> postgreSQLContainer = BuildingPostgresqlContainer.getInstance();
 
+    @MockBean
+    private KafkaConsumer kafkaConsumer;
+    @MockBean
+    private KafkaProducer kafkaProducer;
     @Autowired
     StatusRepository statusRepository;
 

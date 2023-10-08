@@ -1,6 +1,8 @@
 package ru.skillbox.group39.friends.controller;
 
 import ru.skillbox.group39.friends.dto.friend.FriendShortDto;
+import ru.skillbox.group39.friends.kafka.KafkaConsumer;
+import ru.skillbox.group39.friends.kafka.KafkaProducer;
 import ru.skillbox.group39.friends.service.impl.FriendsServiceImpl;
 import ru.skillbox.group39.friends.service.security.jwt.JwtFilter;
 import ru.skillbox.group39.friends.service.security.jwt.JwtUtil;
@@ -37,6 +39,10 @@ public class FriendControllerTest {
 
     @MockBean
     private FriendsServiceImpl friendsService;
+    @MockBean
+    private KafkaConsumer kafkaConsumer;
+    @MockBean
+    private KafkaProducer kafkaProducer;
 
     @MockBean
     private JwtFilter filter;
