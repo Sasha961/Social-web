@@ -1,7 +1,7 @@
 package com.example.demo.controller.Impl;
 
 import com.example.demo.controller.PostsController;
-import com.example.demo.controller.feignClient.ControllerFromPosts;
+import com.example.demo.controller.feignClient.PostsControllerFeign;
 import com.example.demo.dto.post.Post;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -18,20 +18,20 @@ import java.util.List;
 @Tag(name = "PostService", description = "Работа с постами")
 public class PostControllerImpl implements PostsController {
 
-    private final ControllerFromPosts controllerFromPosts;
+    private final PostsControllerFeign postsControllerFeign;
 
     @Override
     public List<Post> searchPosts(String word) {
-        return controllerFromPosts.searchPosts(word);
+        return postsControllerFeign.searchPosts(word);
     }
 
     @Override
     public void blockPost(Long id) {
-        controllerFromPosts.blockPost(id);
+        postsControllerFeign.blockPost(id);
     }
 
     @Override
     public void unblockPost(Long id) {
-        controllerFromPosts.blockPost(id);
+        postsControllerFeign.blockPost(id);
     }
 }

@@ -1,20 +1,14 @@
 package com.example.demo.controller;
 
-import com.example.demo.controller.feignClient.ControllerFromPosts;
-import com.example.demo.dto.account.AccountDto;
-import com.example.demo.dto.account.User;
+import com.example.demo.controller.feignClient.PostsControllerFeign;
 import com.example.demo.dto.comment.Comment;
 import com.example.demo.dto.comment.CommentTypeEnum;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectWriter;
-import com.fasterxml.jackson.databind.SerializationFeature;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
@@ -36,7 +30,7 @@ public class CommentControllerTest {
     private MockMvc mockMvc;
 
     @MockBean
-    private ControllerFromPosts controllerFromPosts;
+    private PostsControllerFeign controllerFromPosts;
 
     @Test
     @WithMockUser(username = "admin", roles = "ADMIN")

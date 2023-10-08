@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.20.xsd">
+    <changeSet id="create_table_comment" author="vofka">
+        <sql>CREATE TYPE comment_types AS ENUM ('POST','COMMENT')</sql>
+        <!-- Cоздание таблицы comment-->
+        <createTable tableName="comment">
+            <column name="id" type="uuid"><constraints nullable="true"/> </column>
+            <column name="is_deleted" type="boolean"/>
+            <column name="name" type="text"/>
+            <column name="comment_type" type="text"/>
+            <column name="time_created" type="timestamp"/>
+            <column name="time_changed" type="timestamp"/>
+            <column name="author_id" type="uuid"/>
+            <column name="parent_id" type="uuid"/>
+            <column name="comment_text" type="text"/>
+            <column name="post_id" type="uuid"/>
+            <column name="is_blocked" type="boolean"/>
+            <column name="like_amount" type="bigint"/>
+            <column name="my_like" type="boolean"/>
+            <column name="comments_count" type="bigint"/>
+            <column name="image_path" type="text"/>
+        </createTable>
+    </changeSet>
+</databaseChangeLog>

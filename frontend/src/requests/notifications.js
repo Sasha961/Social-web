@@ -1,8 +1,8 @@
 import axios from 'axios';
 
 export default {
-  get() {
-    return axios.get('notifications');
+  get(page = 0, size = null) {
+    return axios.get('notifications', { params: { page, size}});
   },
 
   getLength() {

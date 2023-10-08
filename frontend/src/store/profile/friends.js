@@ -128,7 +128,7 @@ export default {
 
     async apiRequestsCount({ commit }) {
       const { data } = await friends.friendRequestsCount();
-      commit('setRequestsCount', data);
+      commit('setRequestsCount', data.count);
     },
   },
 };

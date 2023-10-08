@@ -1,6 +1,6 @@
 package com.example.demo;
 
-import com.example.demo.controller.feignClient.ControllerFromUsers;
+import com.example.demo.controller.feignClient.UsersControllerFeign;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -20,7 +20,7 @@ public class SecurityTest {
     private MockMvc mockMvc;
 
     @MockBean
-    private ControllerFromUsers controllerFromUsers;
+    private UsersControllerFeign controllerFromUsers;
 
     @Test
     public void securityAccessAllowedTest() throws Exception {

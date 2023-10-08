@@ -1,6 +1,6 @@
 package com.example.demo.service.Impl;
 
-import com.example.demo.controller.feignClient.ControllerFromUsers;
+import com.example.demo.controller.feignClient.UsersControllerFeign;
 import com.example.demo.dto.account.AccountCountPerAgeDto;
 import com.example.demo.dto.account.AccountStatisticRequestDto;
 import com.example.demo.dto.account.AccountStatisticResponseDto;
@@ -8,7 +8,7 @@ import com.example.demo.dto.statistic.AllStatisticDto;
 import com.example.demo.dto.statistic.PostStatisticRequestDto;
 import com.example.demo.dto.statistic.StatisticPerDateDto;
 import com.example.demo.dto.statistic.StatisticResponseDto;
-import com.example.demo.controller.feignClient.ControllerFromPosts;
+import com.example.demo.controller.feignClient.PostsControllerFeign;
 import com.example.demo.service.StatisticService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -23,47 +23,47 @@ import java.util.List;
 public class StatisticServiceImpl implements StatisticService {
 
 
-    private final ControllerFromUsers accountControllerFromUsers;
+    private final UsersControllerFeign usersControllerFeign;
 
-    private final ControllerFromPosts controllerFromPosts;
+    private final PostsControllerFeign postsControllerFeign;
 
 
     @Override
     public AllStatisticDto getAllStatistic() {
         AllStatisticDto allStatisticDto = new AllStatisticDto();
-//        allStatisticDto.setUsers(accountControllerFromUsers.getAllUsersCount());
-//        allStatisticDto.setComments(controllerFromPosts.allCountComment());
-        allStatisticDto.setLikes(500L);
-//        allStatisticDto.setPublications(controllerFromPosts.allCountPosts());
+//        allStatisticDto.setUsers(usersControllerFeign.getAllUsersCount());
+//        allStatisticDto.setComments(postsControllerFeign.allCountComment());
+//        allStatisticDto.setLikes(postsControllerFeign.allCountLikes());
+//        allStatisticDto.setPublications(postsControllerFeign.allCountPosts());
 
         return allStatisticDto;
     }
 
     @Override
     public StatisticResponseDto postStatistic(@RequestBody(required = false) PostStatisticRequestDto statisticRequest) {
-//        controllerFromPosts.postStatistic(statisticRequest);
-        return getStatistic();
+//        postsControllerFeign.postStatistic(statisticRequest);
+        return getStatistPlug();
     }
 
     @Override
     public StatisticResponseDto likeStatistic(@RequestBody(required = false) PostStatisticRequestDto postStatisticRequest) {
-//        controllerFromPosts.likeStatistic(postStatisticRequest);
-        return getStatistic();
+//        postsControllerFeign.likeStatistic(postStatisticRequest);
+        return getStatistPlug();
     }
 
     @Override
     public StatisticResponseDto commentStatistic(@RequestBody(required = false) PostStatisticRequestDto postStatisticRequest) {
-//        controllerFromPosts.commentStatistic(postStatisticRequest);
-        return getStatistic();
+//        postsControllerFeign.commentStatistic(postStatisticRequest);
+        return getStatistPlug();
     }
 
     @Override
     public AccountStatisticResponseDto accountStatistic(@RequestBody(required = false) AccountStatisticRequestDto accountStatisticRequest) {
 //        controllerFromUsers.getListAllAccounts();
-        return  getAccountStatistic();
+        return getAccountStatisticPlug();
     }
 
-    private AccountStatisticResponseDto getAccountStatistic(){
+    private AccountStatisticResponseDto getAccountStatisticPlug() {
         StatisticPerDateDto statisticPerDate = new StatisticPerDateDto();
         statisticPerDate.setDate(new Date());
         statisticPerDate.setCount(0);
@@ -86,8 +86,7 @@ public class StatisticServiceImpl implements StatisticService {
         return accountStatisticResponse;
     }
 
-//    потом будет лист из БД
-    public StatisticResponseDto getStatistic(){
+    public StatisticResponseDto getStatistPlug() {
 
         StatisticPerDateDto statisticPerDate = new StatisticPerDateDto();
         statisticPerDate.setDate(new Date());

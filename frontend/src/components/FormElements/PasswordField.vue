@@ -26,10 +26,11 @@
 
       <template v-else>
         <span class="form__error" v-if="v.$dirty && !v.minLength">
-          Пароль должен быть не менее
+          <!-- Пароль должен быть не менее
           {{ v.$params.minLength.min }}
           символов. Сейчас он
-          {{ password.length }}
+          {{ password.length }} -->
+          errorMessage
         </span>
       </template>
     </div>
@@ -41,7 +42,7 @@
 
       <p class="form__password-info">
         Пароль должен состоять из латинских букв, цифр и знаков. Обязательно содержать одну
-        заглавную букву, одну цифру и состоять из 8 символов.
+        заглавную букву, одну цифру и состоять минимум из 8 символов.
       </p>
     </template>
 

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.20.xsd">
+    <changeSet id="create_table_like" author="vofka">
+        <sql>CREATE TYPE like_types AS ENUM ('POST','COMMENT')</sql>
+        <!-- Cоздание таблицы like-->
+        <createTable tableName="like">
+            <column name="id" type="uuid"><constraints nullable="true"/> </column>
+            <column name="is_deleted" type="boolean"/>
+            <column name="author_id" type="uuid"/>
+            <column name="time_created" type="timestamp"/>
+            <column name="item_id" type="uuid"/>
+            <column name="like_type" type="text"/>
+            <column name="reaction_type" type="text"/>
+        </createTable>
+    </changeSet>
+</databaseChangeLog>

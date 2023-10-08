@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+        xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd
+        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
+        http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-latest.xsd">
+
+    <changeSet id="168879189871-2" author="Artem">
+        <sql>
+            SET timezone = 'Europe/Moscow';
+        </sql>
+        <createTable tableName="notifications_settings">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_settings" unique="true"/>
+            </column>
+            <column name="enable_like" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+            <column name="enable_post" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+            <column name="enable_comment" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+            <column name="enable_comment_comment" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+            <column name="enable_message" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+            <column name="enable_friend_request" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+            <column name="enable_friend_birthday" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+            <column name="enable_send_email_message" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+</databaseChangeLog>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.20.xsd
+                        http://www.liquibase.org/xml/ns/dbchangelog
+                        http://www.liquibase.org/xml/ns/dbchangelog-ext">
+    <include file="changeset-create-tab-tag.xml" relativeToChangelogFile="true"/>
+    <include file="changeset-create-tab-comment.xml" relativeToChangelogFile="true"/>
+    <include file="changeset-create-tab-like.xml" relativeToChangelogFile="true"/>
+    <include file="changeset-create-tab-post.xml" relativeToChangelogFile="true"/>
+    <include file="changeset-create-tab-reaction.xml" relativeToChangelogFile="true"/>
+    <include file="changeset-create-tab-user.xml" relativeToChangelogFile="true"/>
+    <include file="changeset-create-tab-delayed-post.xml" relativeToChangelogFile="true"/>
+    <include file="changeset-rename-tab-like.xml" relativeToChangelogFile="true"/>
+    <include file="changeset-change-data-type.xml" relativeToChangelogFile="true"/>
+    <include file="changeset-change-data-type-delayed-post.xml" relativeToChangelogFile="true"/>
+</databaseChangeLog>

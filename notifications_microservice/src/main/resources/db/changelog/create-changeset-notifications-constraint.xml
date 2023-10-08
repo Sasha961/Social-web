@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+        xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd
+        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
+        http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-latest.xsd">
+
+    <changeSet id="1688319789871-2" author="Artem">
+        <sql>
+            SET timezone = 'Europe/Moscow';
+        </sql>
+<!--        <addForeignKeyConstraint constraintName="fk_notify_stamped"-->
+<!--                                 baseTableName="notifications_simple"-->
+<!--                                 baseColumnNames="id"-->
+<!--                                 referencedTableName="notifications_stamped"-->
+<!--                                 referencedColumnNames="data"/>-->
+
+<!--        <addForeignKeyConstraint constraintName="fk_id"-->
+<!--                                 baseTableName="notifications_simple"-->
+<!--                                 baseColumnNames="id"-->
+<!--                                 referencedTableName="notifications_stamped"-->
+<!--                                 referencedColumnNames="id"/>-->
+
+        <addForeignKeyConstraint constraintName="fk_stamped_notify"
+                                 baseTableName="notifications_stamped"
+                                 baseColumnNames="data"
+                                 referencedTableName="notifications_simple"
+                                 referencedColumnNames="id"/>
+
+        <addForeignKeyConstraint constraintName="fk_simple_author"
+                                 baseTableName="notifications_simple"
+                                 baseColumnNames="author"
+                                 referencedTableName="author_of_notification"
+                                 referencedColumnNames="id"/>
+    </changeSet>
+</databaseChangeLog>

@@ -4,7 +4,9 @@
 
     <div class="push__wrap" :class="{ open: isOpen }" ref="wrap">
       <div class="push__list" ref="list">
-        <div class="push__item" v-for="info in getNotifications" :key="info.id">
+        <!-- <div class="push__item" v-for="info in getNotifications" :key="info.id"> -->
+        <div class="push__item" v-for="info in []" :key="info.id">
+
           <div class="main-layout__user-pic" style="background-color: #8bc49e">
             <div class="push__img" v-if="info.author.photo">
               <img :src="info.author.photo" :alt="info.author.firstName" />
@@ -26,10 +28,6 @@
           <span class="push__time">{{ info.sentTime | moment('from') }}</span>
         </div>
       </div>
-
-      <router-link class="push__btn" :to="{ name: 'Push' }" v-if="getNotificationsLength > 0">
-        Показать ({{ getNotificationsLength }})
-      </router-link>
     </div>
   </div>
 </template>

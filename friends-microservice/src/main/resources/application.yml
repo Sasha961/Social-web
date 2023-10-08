@@ -6,6 +6,8 @@ spring.jpa:
     ddl-auto: none
 
 spring:
+  liquibase:
+    change-log: classpath:db/changelog/db.changelog-master.xml
   application:
     name: FRIENDS
   datasource:
@@ -49,3 +51,34 @@ info:
   organization: SkillBox
   description: Spring boot project
   name: FRIENDS
+
+kafka:
+  consumer-enabled: true
+  bootstrap-servers: 5.63.154.191:9092,5.63.154.191:9093
+  security:
+    protocol: PLAINTEXT
+    spring.json.value.default.type: com.user.dto.JsonMessage.java
+    spring.deserializer.key.delegate.class: org.apache.kafka.common.serialization.StringDeserializer
+    spring.deserializer.value.delegate.class: org.springframework.kafka.support.serializer.JsonDeserializer
+  consumer:
+    properties:
+      spring.json.trusted.packages: "com.user.dto.account.AccountForFriends"
+    auto-offset-reset: earliest
+    group-id: ${spring.application.name}
+    key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+    value-deserializer: org.apache.kafka.common.serialization.JsonDeserializer
+    max-poll-records: 1
+    fetch-max-wait: 36000
+    enable-auto-commit: false
+
+  listener:
+    poll-timeout: 1800000
+    concurrency: 1
+    ack-mode: record
+  topics:
+    friends: friends-topic
+
+logging:
+  level:
+    org.apache.kafka.clients.consumer.ConsumerConfig: WARN
+    org.apache.kafka.clients.clients.Metadata: WARN

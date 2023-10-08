@@ -12,7 +12,6 @@
           placeholder="Дайте тему"
           v-model="title"
         />
-
         <div v-if="src">
           <img :src="src" :alt="'photo'" class="post-image" />
         </div>
@@ -37,7 +36,11 @@
           @mouseleave.native="hideLinkMenu"
         >
           <div class="news-add__actions-buttons">
-            <button class="bold" :class="{ 'is-active': isActive.bold() }" @click="commands.bold">
+            <button
+              class="bold"
+              :class="{ 'is-active': isActive.bold() }"
+              @click="commands.bold"
+            >
               ж
             </button>
 
@@ -58,7 +61,10 @@
             </button>
 
             <div class="news-add__actions-link">
-              <div class="news-add__actions-link-hidden" :class="{ 'is-active': isOpenLinkMenu }">
+              <div
+                class="news-add__actions-link-hidden"
+                :class="{ 'is-active': isOpenLinkMenu }"
+              >
                 <form @submit.prevent="setLinkUrl(commands.link, linkUrl)">
                   <input
                     type="text"
@@ -123,42 +129,62 @@
       />
 
       <div class="news-add__modal-selects">
-        <select class="select news-add__modal-select day" v-model="day" @change="changeDate">
+        <select
+          class="select news-add__modal-select day"
+          v-model="day"
+          @change="changeDate"
+        >
           <option v-for="d in days" :key="d">{{ d }}</option>
         </select>
 
-        <select class="select news-add__modal-select month" v-model="month" @change="changeDate">
+        <select
+          class="select news-add__modal-select month"
+          v-model="month"
+          @change="changeDate"
+        >
           <option v-for="month in months" :key="month.val" :value="month">
             {{ month.text }}
           </option>
         </select>
 
-        <select class="select news-add__modal-select year" v-model="year" @change="changeDate">
+        <select
+          class="select news-add__modal-select year"
+          v-model="year"
+          @change="changeDate"
+        >
           <option v-for="i in years" :key="i">{{ i }}</option>
         </select>
 
-        <select class="select news-add__modal-select time" v-model="time" @change="changeDate">
+        <select
+          class="select news-add__modal-select time"
+          v-model="time"
+          @change="changeDate"
+        >
           <option v-for="t in times" :key="t">{{ t }}</option>
         </select>
       </div>
 
       <template slot="actions">
         <button-hover @click.native="onPlaning">Планировать</button-hover>
-        <button-hover variant="red" bordered @click.native="onCancelPlaning">Отмена</button-hover>
+        <button-hover
+          variant="red"
+          bordered
+          @click.native="onCancelPlaning">
+          Отмена</button-hover>
       </template>
     </modal>
   </div>
 </template>
 
 <script>
-import { Editor, EditorContent, EditorMenuBar } from 'tiptap';
-import { Bold, Italic, Underline, Link } from 'tiptap-extensions';
-import { mapGetters, mapActions, mapMutations } from 'vuex';
-import moment from 'moment';
-import AddTags from '@/components/News/AddTags';
-import Modal from '@/components/Modal';
+import { Editor, EditorContent, EditorMenuBar } from "tiptap";
+import { Bold, Italic, Underline, Link } from "tiptap-extensions";
+import { mapGetters, mapActions, mapMutations } from "vuex";
+import moment from "moment";
+import AddTags from "@/components/News/AddTags";
+import Modal from "@/components/Modal";
 export default {
-  name: 'NewsAddForm',
+  name: "NewsAddForm",
   components: { AddTags, EditorContent, EditorMenuBar, Modal },
   props: {
     edit: Boolean,
@@ -166,21 +192,21 @@ export default {
     info: Object,
   },
   data: () => ({
-    title: '',
-    tags: [],
+    title: "",
+    tags: ["tag-1", "tag-2"],
     editor: null,
-    linkUrl: '',
+    linkUrl: "",
     isOpenLinkMenu: false,
     modalShow: false,
     isPlaning: null,
     planingTime: new Date(),
     componentKey: 0,
-    photo: '',
-    src: '',
+    photo: "",
+    src: "",
     attrs: [
       {
-        key: 'weekends',
-        content: 'weekends',
+        key: "weekends",
+        content: "weekends",
         dates: {
           start: new Date(2018, 0, 1),
           end: new Date(2022, 0, 1),
@@ -189,44 +215,44 @@ export default {
       },
     ],
     day: 1,
-    month: { val: 0, text: 'Января' },
+    month: { val: 0, text: "Января" },
     year: 2000,
     months: [
-      { val: 0, text: 'Января' },
-      { val: 1, text: 'Февраля' },
-      { val: 2, text: 'Марта' },
-      { val: 3, text: 'Апреля' },
-      { val: 4, text: 'Мая' },
-      { val: 5, text: 'Июня' },
-      { val: 6, text: 'Июля' },
-      { val: 7, text: 'Августа' },
-      { val: 8, text: 'Сентября' },
-      { val: 9, text: 'Октября' },
-      { val: 10, text: 'Ноября' },
-      { val: 11, text: 'Декабря' },
+      { val: 0, text: "Января" },
+      { val: 1, text: "Февраля" },
+      { val: 2, text: "Марта" },
+      { val: 3, text: "Апреля" },
+      { val: 4, text: "Мая" },
+      { val: 5, text: "Июня" },
+      { val: 6, text: "Июля" },
+      { val: 7, text: "Августа" },
+      { val: 8, text: "Сентября" },
+      { val: 9, text: "Октября" },
+      { val: 10, text: "Ноября" },
+      { val: 11, text: "Декабря" },
     ],
-    time: '12:00',
+    time: "12:00",
     times: [
-      '8:00',
-      '9:00',
-      '10:00',
-      '11:00',
-      '12:00',
-      '13:00',
-      '14:00',
-      '15:00',
-      '16:00',
-      '17:00',
-      '18:00',
-      '19:00',
-      '20:00',
-      '21:00',
-      '22:00',
-      '23:00',
+      "8:00",
+      "9:00",
+      "10:00",
+      "11:00",
+      "12:00",
+      "13:00",
+      "14:00",
+      "15:00",
+      "16:00",
+      "17:00",
+      "18:00",
+      "19:00",
+      "20:00",
+      "21:00",
+      "22:00",
+      "23:00",
     ],
   }),
   computed: {
-    ...mapGetters('profile/info', ['getInfo']),
+    ...mapGetters("profile/info", ["getInfo"]),
     years() {
       return Array.from({ length: 60 }, (value, index) => 1970 + index);
     },
@@ -240,7 +266,6 @@ export default {
   },
   watch: {
     planingTime(val) {
-      console.log(val);
       this.day = moment(val).date();
       this.month = this.months[moment(val).month()];
       this.year = moment(val).year();
@@ -263,12 +288,11 @@ export default {
         this.day = moment(this.info.time).date();
         this.month = this.months[moment(this.info.time).month()];
         this.year = moment(this.info.time).year();
-        console.log(moment.unix(this.info.time));
         this.planingTime = moment.unix(this.info.time);
       }
     } else {
       this.editor = new Editor({
-        content: '',
+        content: "",
         extensions: [new Bold(), new Italic(), new Underline(), new Link()],
       });
       this.day = moment().date();
@@ -281,10 +305,10 @@ export default {
   },
 
   methods: {
-    ...mapActions('profile/feeds', ['actionsFeed']),
-    ...mapActions('global/storagePostPhoto', ['apiStoragePostPhoto']),
-    ...mapGetters('global/storagePostPhoto', ['getStoragePostPhoto']),
-    ...mapMutations('global/storagePostPhoto', ['setStoragePostPhoto']),
+    ...mapActions("profile/feeds", ["actionsFeed"]),
+    ...mapActions("global/storagePostPhoto", ["apiStoragePostPhoto"]),
+    ...mapGetters("global/storagePostPhoto", ["getStoragePostPhoto"]),
+    ...mapMutations("global/storagePostPhoto", ["setStoragePostPhoto"]),
 
     onChangeTags(tags) {
       this.tags = tags;
@@ -293,9 +317,9 @@ export default {
     async submitForm() {
       if (this.title.length <= 3 || this.editor.getHTML().length <= 7) {
         if (this.modalShow) this.closeModal();
-        this.$store.dispatch('global/alert/setAlert', {
-          status: 'response',
-          text: 'Тема должен состоять не менее трех символов, текст - не менее семи.',
+        this.$store.dispatch("global/alert/setAlert", {
+          status: "response",
+          text: "Тема должен состоять не менее трех символов, текст - не менее семи.",
         });
         return;
       }
@@ -307,42 +331,46 @@ export default {
           this.imagePath = this.getStoragePostPhoto();
         }
       } else if (!this.src) {
-        this.imagePath = '';
+        this.imagePath = "";
       } else if (this.info && this.info.imagePath) {
         this.imagePath = this.info.imagePath;
       }
 
-      await this.actionsFeed({
-        imagePath: this.imagePath,
-        route: this.$route.name,
-        postId: this.info ? this.info.id : null,
-        edit: this.edit,
-        id: this.getInfo.id,
-        title: this.title,
-        postText: this.editor.getHTML(),
-        tags: this.tags.map((tag) => {
-          return tag.name;
-        }),
-        publishDate:
-          this.isPlaning &&
-          moment({
-            years: this.year,
-            months: this.month.val,
-            date: this.day,
-            hours: this.time.substring(0, 2),
-          }).valueOf() / 1000,
-      }).then(() => {
-        this.$emit('submit-complete');
+      try {
+        await this.actionsFeed({
+          imagePath: this.imagePath,
+          route: this.$route.name,
+          postId: this.info ? this.info.id : null,
+          edit: this.edit,
+          id: this.getInfo.id,
+          title: this.title,
+          postText: this.editor.getHTML(),
+          // tags: this.tags.map((tag) => {
+          //   return tag.name;
+          // }),
+          publishDate:
+            this.isPlaning &&
+            moment({
+              years: this.year,
+              months: this.month.val,
+              date: this.day,
+              hours: this.time.substring(0, 2),
+            }).valueOf() / 1000,
+        });
+        console.log(this.editor.getHTML())
+        this.$emit("submit-complete");
         this.setStoragePostPhoto(null);
-      });
+      } catch (err) {
+        console.dir(err);
+      }
     },
     loadPhoto() {
       this.$refs.photo.click();
     },
     deletePhoto() {
-      this.photo = '';
-      this.src = '';
-      this.setStoragePostPhoto('');
+      this.photo = "";
+      this.src = "";
+      this.setStoragePostPhoto("");
     },
     processFile(event) {
       [this.photo] = event.target.files;
@@ -373,12 +401,10 @@ export default {
       this.modalShow = false;
     },
     onPlaning() {
-      console.log(this.planingTime);
-      console.log(new Date());
       if (this.planingTime < new Date()) {
-        this.$store.dispatch('global/alert/setAlert', {
-          status: 'validation',
-          text: 'Запланированное время не может быть в прошлом времени!',
+        this.$store.dispatch("global/alert/setAlert", {
+          status: "validation",
+          text: "Запланированное время не может быть в прошлом времени!",
         });
         return;
       }
@@ -388,13 +414,13 @@ export default {
     onCancelPlaning() {
       this.isPlaning = false;
       this.year = 2000;
-      this.month = { val: 0, text: 'Января' };
+      this.month = { val: 0, text: "Января" };
       this.day = 1;
-      this.time = '12:00';
+      this.time = "12:00";
       this.modalShow = false;
     },
     closeAddForm() {
-      this.$emit('close-form');
+      this.$emit("close-form");
     },
     setInfo(val) {
       this.day = moment(val).date();
@@ -402,13 +428,12 @@ export default {
       this.year = moment(val).year();
     },
     changeDate() {
-      console.log('changeDate', this.year, this.month.val, this.day, this.time);
       this.componentKey += 1;
       this.planingTime = new Date(
         this.year,
         this.month.val,
         this.day,
-        this.time.split(':')[0].toString()
+        this.time.split(":")[0].toString()
       );
     },
     onChangeDatePicker(value) {
@@ -446,5 +471,4 @@ export default {
 
   p
     height 210px
-
 </style>

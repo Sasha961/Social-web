@@ -9,7 +9,6 @@
       @submit-complete="toggleEditNews"
       @close-form="toggleEditNews"
     />
-
     <template v-else>
       <template v-if="!admin">
         <div class="edit">
@@ -212,7 +211,6 @@ export default {
       return this.comments[this.info.id];
     },
   },
-
   mounted() {
     this.isLotText = this.$refs.text.offsetHeight > 100;
   },

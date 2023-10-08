@@ -27,18 +27,17 @@ public class StorageServiceImpl implements StorageService {
     @Value("${signing.region}")
     private String signingRegion;
 
-
     @Override
-    public StorageDto downloadFile(MultipartFile file) throws Exception {
-
+    public StorageDto downloadFile(MultipartFile file) {
         Storage storage = new Storage(uploadPath, accessKey, secretKey, serviceEndpoint, signingRegion);
-        storage.addFile("social-web-bucket2", file);
+        try {
+            storage.addFile("social-web-bucket2", file);
+        } catch (Exception e) {
+            throw new RuntimeException("Превышен Лимит в 10 мб");
+        }
         String url = storage.getUrl(file.getOriginalFilename(), "social-web-bucket2");
-
-
         StorageDto storageDto = new StorageDto();
         storageDto.setFileName(url);
-
         return storageDto;
     }
 }

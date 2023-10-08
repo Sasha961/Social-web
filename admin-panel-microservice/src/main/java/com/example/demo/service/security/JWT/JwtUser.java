@@ -24,13 +24,13 @@ public class JwtUser implements UserDetails {
 
     private String password;
 
-    private String userId;
+    private Long userId;
 
     private boolean enabled;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority("ROLE_ADMIN"));
+        return List.of(new SimpleGrantedAuthority("ROLE_USER"));
     }
 
     @Override
@@ -43,7 +43,7 @@ public class JwtUser implements UserDetails {
         return username;
     }
 
-    public String getUserId() {
+    public Long getUserId() {
         return userId;
     }
 

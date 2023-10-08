@@ -44,13 +44,11 @@ import AutoPaginator from '@/components/AutoPaginator.vue';
 export default {
   name: 'News',
   components: { NewsBlock, NewsAdd, Spinner, ErrorBlock, AutoPaginator },
-
   computed: {
     ...mapState('global/status', ['loading', 'error', 'errorMessage']),
     ...mapGetters('profile/info', ['getInfo']),
     ...mapState('profile/feeds', ['feeds', 'feedsPagination']),
   },
-
   methods: {
     ...mapActions('profile/feeds', ['apiFeeds']),
     ...mapMutations('profile/feeds', ['setFeeds']),

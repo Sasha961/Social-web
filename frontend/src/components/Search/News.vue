@@ -4,32 +4,28 @@
       <news-block v-for="n in news" :key="n.id" :info="n" />
     </search-block>
 
-    <pagination :count="total" v-model="page" :per-page="size" />
+
   </div>
 </template>
 
 <script>
-import { mapGetters, mapActions } from 'vuex';
-import SearchBlock from '@/components/Search/Block';
-import NewsBlock from '@/components/News/Block';
-import Pagination from '@/components/Pagination.vue';
+import { mapGetters, mapActions } from "vuex";
+import SearchBlock from "@/components/Search/Block";
+import NewsBlock from "@/components/News/Block";
+
 
 export default {
-  name: 'SearchNews',
-  components: { SearchBlock, NewsBlock, Pagination },
-
-  data() {
-    return {
-      page: 1,
-      size: 5,
-      total: 20,
-    };
-  },
+  name: "SearchNews",
+  components: { SearchBlock, NewsBlock},
 
   computed: {
-    ...mapGetters('global/search', ['getResultById', 'getNewsQueryParams', 'getNewsPagination']),
+    ...mapGetters("global/search", [
+      "getResultById",
+      "getNewsQueryParams",
+      "getNewsPagination",
+    ]),
     news() {
-      return this.getResultById('news');
+      return this.getResultById("news");
     },
   },
 
@@ -46,6 +42,11 @@ export default {
       // this.page = this.getNewsPagination.page;
       // this.perPage = this.getNewsPagination.perPage;
       this.total = this.getNewsPagination.total;
+      // page: 1,
+      // perPage: 50,
+      // total: 20,
+      // pageCount: 20,
+      // records: 150
     },
   },
 
@@ -62,7 +63,7 @@ export default {
   },
 
   methods: {
-    ...mapActions('global/search', ['searchNews']),
+    ...mapActions("global/search", ["searchNews"]),
   },
 };
 </script>

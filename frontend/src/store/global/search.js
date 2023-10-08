@@ -139,14 +139,13 @@ export default {
     },
 
     async searchAll({ dispatch, state }, text) {
-      console.log(text);
       const searchQueryUsers = Object.assign({}, state.usersQueryParams, {
         author: text || '',
         size: state.usersPagination.size,
         page: state.usersPagination.page - 1,
       });
       await dispatch('searchUsers', { payload: searchQueryUsers });
-      console.log(text);
+
       const searchQueryNews = Object.assign({}, state.newsQueryParams, {
         text: text || '',
         size: state.newsPagination.size,

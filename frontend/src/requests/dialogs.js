@@ -10,7 +10,7 @@ export default {
   },
 
   unreadedMessages() {
-    return axios.get('/dialogs/unreaded');
+    return axios.get('/dialogs/unread');
   },
 
   markReaded(id) {

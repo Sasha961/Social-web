@@ -1,108 +1,110 @@
 <template>
-  <div class="settings-main">
-    <user-info-form-block label="Имя:" placeholder="Введите имя" v-model="firstName" />
+  <div class="settings-main" v-if="getInfo">
+    <user-info-form-block
+      label="Имя:"
+      placeholder="Введите имя"
+      :value="firstName"
+      @change="firstName = $event"
+      :v="$v.firstName"
+    />
 
-    <user-info-form-block label="Фамилия:" placeholder="Введите фамилию" v-model="lastName" />
+    <user-info-form-block
+      label="Фамилия:"
+      placeholder="Введите фамилию"
+      :value="lastName"
+      @change="lastName = $event"
+      :v="$v.lastName"
+    />
 
+    <gender-input :gender="gender" @change="gender = $event" />
     <user-info-form-block
       label="Телефон:"
       placeholder="Введите телефон"
-      v-model="phone"
+      :value="phone"
+      @change="phone = $event"
       phone="phone"
     />
+    <input-section sectionName="Страна:">
+      <select
+        class="select user-info-form__select country user-info-form__input"
+        v-model="country"
+      >
+        <option value="">Не выбрано</option>
+        <option v-for="(value, key, index) in countries" :key="index" :value="key">
+          {{ key }}
+        </option>
+      </select>
+    </input-section>
+    <input-section sectionName="Город:">
+      <select
+        class="select user-info-form__select country user-info-form__input"
+        v-model="city"
+      >
+        <option value="">Не выбрано</option>
+        <option v-for="(city, index) in cities" :key="index" :value="city">
+          {{ city }}
+        </option>
+      </select>
+    </input-section>
+    <input-section sectionName="Дата рождения:">
+      <setting-select :propsList="days" :value="day" class="day" @select="day = $event" />
+      <setting-select
+        :propsList="months"
+        :value="month"
+        class="month"
+        @select="month = $event"
+      />
+      <setting-select
+        :propsList="years"
+        :value="year"
+        class="year"
+        @select="year = $event"
+      />
+    </input-section>
+    <input-section sectionName="Фотография:" class="user-info-form__block--photo">
+      <div class="user-info-form__photo-wrap">
+        <input
+          class="user-info-form__input_stylus-photo"
+          type="file"
+          ref="photo"
+          id="photo"
+          @change="processFile($event)"
+          accept="image/*"
+        />
 
-    <div class="user-info-form__block">
-      <span class="user-info-form__label_stylus">Страна:</span>
+        <label
+          class="user-info-form__input_stylus user-info-form__input_stylus--photo"
+          for="photo"
+        >
+          <span class="setting-main__photo-delete" v-if="src">
+            {{ photoName }}
 
-      <div class="user-info-form__wrap">
-        <select class="select user-info-form__select country" v-model="country">
-          <option value="">Неизвестно</option>
-          <option v-for="c in countries" :key="c.id" :value="c.title">
-            {{ c.title }}
-          </option>
-        </select>
+            <delete-icon
+              class="setting-main__delete-icon"
+              @click.native.prevent="deletePhoto"
+            />
+          </span>
+        </label>
+
+        <button-hover variant="fill" bordered="bordered" @click.native="loadPhoto">
+          Загрузить
+        </button-hover>
       </div>
-    </div>
-
-    <div class="user-info-form__block">
-      <span class="user-info-form__label_stylus">Город:</span>
-
-      <div class="user-info-form__wrap">
-        <select class="select user-info-form__select country" v-model="city">
-          <option value="">Неизвестно</option>
-          <option v-for="c in cities" :key="c.id" :value="c.title">
-            {{ c.title }}
-          </option>
-        </select>
+      <div class="main-layout__user-pic" v-if="src" style="margin: 10px">
+        <img :src="src" :alt="firstName[0]" />
       </div>
-    </div>
-
-    <div class="user-info-form__block">
-      <span class="user-info-form__label_stylus">Дата рождения:</span>
-
-      <div class="user-info-form__wrap">
-        <select class="select user-info-form__select day" v-model="day">
-          <option :value="null">Неизвестно</option>
-          <option v-for="d in days" :key="d">{{ d }}</option>
-        </select>
-
-        <select class="select user-info-form__select month" v-model="month">
-          <option :value="null">none</option>
-          <option v-for="month in months" :key="month.val" :value="month">
-            {{ month.text }}
-          </option>
-        </select>
-
-        <select class="select user-info-form__select year" v-model="year">
-          <option :value="null">Неизвестно</option>
-          <option v-for="i in years" :key="i">{{ i }}</option>
-        </select>
-      </div>
-    </div>
-
-    <div class="user-info-form__block user-info-form__block--photo">
-      <span class="user-info-form__label_stylus">Фотография:</span>
-
-      <div class="user-info-form__wrap">
-        <div class="user-info-form__photo-wrap">
-          <input
-            class="user-info-form__input_stylus-photo"
-            type="file"
-            ref="photo"
-            id="photo"
-            @change="processFile($event)"
-            accept="image/*"
-          />
-
-          <label
-            class="user-info-form__input_stylus user-info-form__input_stylus--photo"
-            for="photo"
-          >
-            <span class="setting-main__photo-delete" v-if="photoName">
-              {{ photoName }}
-
-              <delete-icon class="setting-main__delete-icon" @click.native.prevent="deletePhoto" />
-            </span>
-          </label>
-
-          <button-hover variant="fill" bordered="bordered" @click.native="loadPhoto">
-            Загрузить
-          </button-hover>
-        </div>
-
-        <div class="main-layout__user-pic" v-if="src" style="margin: 10px">
-          <img :src="src" :alt="firstName[0]" />
-        </div>
-      </div>
-    </div>
-
-    <user-info-form-block label="О себе:" v-model="about" about="about" />
+    </input-section>
+    <user-info-form-block :about="true" label="О себе:" @change="about = $event" :value="about"/>
 
     <div class="user-info-form__block user-info-form__block--actions">
       <span class="user-info-form__label_stylus" />
-
       <div class="user-info-form__wrap">
-        <button-hover @click.native.prevent="submitHandler"> Сохранить </button-hover>
+        <button-hover
+          @click.native.prevent="submitHandler"
+          :showSpinner="isUserDataSenfing"
+        >
+          Сохранить
+        </button-hover>
 
         <router-link class="settings-main__back" :to="{ name: 'Profile' }">
           <button-hover variant="red" bordered="bordered"> Отменить </button-hover>
@@ -110,147 +112,174 @@
       </div>
     </div>
   </div>
+  <spinner v-else />
 </template>
 
 <script>
-import { mapGetters, mapActions, mapMutations } from 'vuex';
-import DeleteIcon from '../../Icons/DeleteIcon.vue';
+import { mapGetters, mapActions, mapMutations } from "vuex";
+import DeleteIcon from "../../Icons/DeleteIcon.vue";
 // import moment from 'moment';
-import UserInfoFormBlock from '@/components/Settings/UserInfoForm/Block.vue';
-import axios from 'axios';
+import UserInfoFormBlock from "@/components/Settings/UserInfoForm/Block.vue";
+import GenderInput from "@/components/Settings/UserInfoForm/GenderInput.vue";
+import axios from "axios";
+import { required } from "vuelidate/lib/validators";
+import ButtonHover from "@/components/ButtonHover";
+import Spinner from "@/components/Spinner";
+import SettingSelect from "@/components/Settings/UserInfoForm/SettingSelect.vue";
+import InputSection from "@/components/Settings/UserInfoForm/InputSection.vue";
 
 export default {
-  name: 'SettingsMain',
-  components: { UserInfoFormBlock, DeleteIcon },
+  name: "SettingsMain",
+  components: {
+    UserInfoFormBlock,
+    DeleteIcon,
+    GenderInput,
+    ButtonHover,
+    Spinner,
+    SettingSelect,
+    InputSection,
+  },
 
   data: () => ({
-    photoName: 'Фотография',
-    firstName: '',
-    lastName: '',
-    phone: '',
-    about: '',
-    day: 1,
-    month: { val: 1, text: 'Января' },
-    year: 2000,
-    months: [
-      { val: 0, text: 'Января' },
-      { val: 1, text: 'Февраля' },
-      { val: 2, text: 'Марта' },
-      { val: 3, text: 'Апреля' },
-      { val: 4, text: 'Мая' },
-      { val: 5, text: 'Июня' },
-      { val: 6, text: 'Июля' },
-      { val: 7, text: 'Августа' },
-      { val: 8, text: 'Сентября' },
-      { val: 9, text: 'Октября' },
-      { val: 10, text: 'Ноября' },
-      { val: 11, text: 'Декабря' },
-    ],
-    photoPath: '',
-    src: '',
-    country: '',
-    city: '',
-    countries: [],
+    photoName: "Фотография",
+    firstName: "",
+    lastName: "",
+    gender: "",
+    phone: "",
+    about: "",
+    photoPath: "",
+    src: "",
+    country: "",
+    city: "",
+    countries: {},
     cities: [],
-    currentCountry: {},
+    isUserDataSenfing: false,
+    day: new Date().getDate(),
+    month: new Date().getMonth(),
+    year: new Date().getFullYear(),
+    months: [
+      { value: 0, title: "Января" },
+      { value: 1, title: "Февраля" },
+      { value: 2, title: "Марта" },
+      { value: 3, title: "Апреля" },
+      { value: 4, title: "Мая" },
+      { value: 5, title: "Июня" },
+      { value: 6, title: "Июля" },
+      { value: 7, title: "Августа" },
+      { value: 8, title: "Сентября" },
+      { value: 9, title: "Октября" },
+      { value: 10, title: "Ноября" },
+      { value: 11, title: "Декабря" },
+    ],
   }),
 
   computed: {
-    ...mapGetters('global/storage', ['getStorage']),
-    ...mapGetters('profile/info', ['getInfo']),
-
+    ...mapGetters("global/storage", ["getStorage"]),
+    ...mapGetters("profile/info", ["getInfo"]),
     phoneNumber() {
-      return this.phone.replace(/\D+/g, '');
+      return this.phone.replace(/\D+/g, "");
     },
-
     years() {
-      return Array.from({ length: 61 }, (value, index) => 1962 + index);
+      const currentYear = new Date().getFullYear();
+      return Array.from({ length: 100 }, (_, index) => currentYear - index);
     },
-
     days() {
-      return this.month.val === 1
-        ? this.year & 3 || (!(this.year % 25) && this.year & 15)
-          ? 28
-          : 29
-        : 30 + ((this.month.val + (this.month.val >> 3)) & 1);
+      return new Date(this.year, this.month + 1, 0).getDate();
+    },
+    isFieldsValid() {
+      if (this.$v.firstName.$invalid || this.$v.lastName.$invalid) {
+        this.$v.$touch();
+        return false;
+      }
+      return true;
+    },
+    birthDate() {
+      let _birthDate = "";
+      if (!isNaN(this.year) && !isNaN(this.month) && !isNaN(this.day)) {
+        _birthDate = new Date(Date.UTC(this.year, this.month, this.day)).toISOString();
+      }
+      return _birthDate;
     },
   },
-
   watch: {
-    getInfo(value) {
-      if (!value) {
-        return;
-      }
-      this.setInfo();
-    },
-    country: {
+    photoPath: {
       immediate: true,
-      handler(value) {
-        if (value && value !== 'none') {
-          this.currentCountry = this.countries.find((country) => country.title === value);
-          this.loadCities(this.currentCountry?.id);
-        } else this.city = 'none';
+      handler() {
+        if (this.photoPath) {
+          this.src = this.photoPath;
+        }
       },
     },
-  },
 
+    getInfo(value) {
+      if (!value) return;
+      this.setInfo();
+    },
+
+    country() {
+      if (this.country) {
+        this.loadCities(this.country)
+      } else {
+        this.cities = []
+        this.city = ''
+      }
+    },
+  },
   mounted() {
+    this.loadCountries();
     if (this.getInfo) {
       this.setInfo();
+      this.src = this.photoPath;
     }
-    this.loadCountries();
+
   },
-
   methods: {
-    ...mapActions('global/storage', ['apiStorage']),
-    ...mapActions('profile/info', ['apiChangeInfo']),
-    ...mapMutations('global/storage', ['setStorage']),
-
-    loadCountries() {
-      axios
-        .get('/geo/country')
-        .then((response) => {
-          this.countries = response.data;
-          if (this.getInfo) this.setInfo();
-        })
-        .catch(() => {});
-      return;
+    ...mapActions("global/storage", ["apiStorage"]),
+    ...mapActions("profile/info", ["apiChangeInfo"]),
+    ...mapMutations("global/storage", ["setStorage"]),
+    async loadCountries() {
+      const res = await axios.get("/users/geo/country");
+      this.countries = res.data;
+      this.loadCities(this.country)
     },
 
-    loadCities(countryId) {
-      if (!countryId) {
-        this.city = null;
-        return;
+    loadCities(country) {
+      this.cities = this.countries[country]
+      if (this.cities && !this.cities.includes(this.city)) {
+        this.city = ''
       }
-      axios.get(`/geo/country/${countryId}/city`).then((response) => {
-        this.cities = response.data;
-      });
-      return countryId;
     },
-
     async submitHandler() {
-      let _birthDate = 'none';
-      console.log(this.country);
-      console.log(this.city);
-      if (this.year && this.month && this.day) {
-        _birthDate = new Date(this.year, this.month.val, this.day).toISOString();
+      if (!this.isFieldsValid) return;
+
+      this.isUserDataSenfing = true;
+
+      if (typeof this.photoPath === 'object' && this.photoPath !== null) {
+        try {
+          const newSrc = await this.apiStorage(this.photoPath);
+          this.photoPath = newSrc;
+        } catch (err) {
+          console.dir(err);
+        }
       }
-      if (this.photoPath) {
-        await this.apiStorage(this.photoPath).then((t) => {
-          (this.photoName = t.data.photoName), (this.photoPath = t.data.photoPath);
-        });
+      try {
+        const userData = {
+          firstName: this.firstName.trim(),
+          lastName: this.lastName.trim(),
+          gender: this.gender,
+          birthDate: this.birthDate,
+          phone: this.phoneNumber,
+          about: this.about,
+          country: this.country,
+          city: this.city,
+          photo: this.photoPath,
+        }
+        await this.apiChangeInfo(userData);
+        this.setStorage(null);
+      } catch (err) {
+        console.dir(err);
       }
-      await this.apiChangeInfo({
-        firstName: this.firstName,
-        lastName: this.lastName,
-        birthDate: _birthDate,
-        phone: this.phoneNumber,
-        about: this.about,
-        country: this.country,
-        city: this.city,
-        photoName: this.photoName,
-        photo: this.photoPath,
-      }).then(() => this.setStorage(null));
+      this.isUserDataSenfing = false;
     },
 
     processFile(event) {
@@ -267,39 +296,36 @@ export default {
     },
 
     deletePhoto() {
-      this.photo = '';
-      this.photoName = '';
-      this.src = '';
-      this.setStorage('');
+      this.photoName = "";
+      this.photoPath = "";
+      this.src = "";
+      this.setStorage("");
     },
 
     setInfo() {
       this.firstName = this.getInfo.firstName;
       this.lastName = this.getInfo.lastName;
-      this.src = this.getInfo.photo;
+      this.gender = this.getInfo.gender;
+      this.photoPath = this.getInfo.photo;
       if (this.getInfo.phone) {
-        this.phone = this.getInfo.phone.replace(/^[+]?[78]/, '');
-      } else this.phone = '';
+        this.phone = this.getInfo.phone.replace(/^[+]?[78]/, "");
+      } else this.phone = "";
 
       if (this.getInfo.birthDate) {
         const birthDate = new Date(this.getInfo.birthDate);
         this.day = birthDate.getDate();
-        this.month = this.months[birthDate.getMonth()];
+        this.month = birthDate.getMonth();
         this.year = birthDate.getFullYear();
       }
-
       this.about = this.getInfo.about;
-
-      if (this.getInfo.country) {
-        this.country = this.getInfo.country;
-        this.currentCountry = this.countries.find((t) => t.title === this.country);
-        this.loadCities(this.currentCountry?.id);
-      }
-
-      if (this.getInfo.city) {
-        this.city = this.getInfo.city;
-      }
+      this.country = this.getInfo.country;
+      this.city = this.getInfo.city;
     },
+  },
+  validations: {
+    firstName: { required },
+    lastName: { required },
+    gender: { required },
   },
 };
 </script>
@@ -330,4 +356,6 @@ export default {
 
 .country
   width 100%
+.user-info-form__input_stylus--photo
+  cursor pointer
 </style>

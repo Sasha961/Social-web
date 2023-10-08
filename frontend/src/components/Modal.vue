@@ -12,7 +12,6 @@
         <div class="modal__body">
           <slot />
         </div>
-
         <div class="modal__actions">
           <slot name="actions" />
         </div>
@@ -23,17 +22,14 @@
 
 <script>
 export default {
-  name: 'Modal',
+  name: "Modal",
   props: {
-    value: {
-      type: Boolean,
-      default: false,
-    },
+    value: { type: Object },
   },
 
   computed: {
     isDisplay() {
-      return this.value;
+      return this.value.show;
     },
 
     scrollBarWidth() {
@@ -42,19 +38,19 @@ export default {
   },
 
   watch: {
-    value() {
-      setTimeout(() => {
-        this.$emit(this.value ? 'onOpen' : 'onClose');
-      }, this.DELAY_EFFECT);
-      if (this.value) {
-        this.setScrollPadding();
-        document.body.classList.add('overflow-hidden');
-      } else {
-        setTimeout(() => {
-          this.removeScrollPadding();
-          document.body.classList.remove('overflow-hidden');
-        }, this.DELAY_EFFECT);
-      }
+    value: {
+      deep: true,
+      handler() {
+        if (this.value.show) {
+          this.setScrollPadding();
+          document.body.classList.add("overflow-hidden");
+        } else {
+          setTimeout(() => {
+            this.removeScrollPadding();
+            document.body.classList.remove("overflow-hidden");
+          }, this.DELAY_EFFECT);
+        }
+      },
     },
   },
 
@@ -64,7 +60,10 @@ export default {
 
   methods: {
     close() {
-      this.$emit('input', false);
+      if (this.value.closeModalOnBackdrop) {
+        this.value.show = false
+        this.$emit("input", this.value);
+      }
     },
 
     checkBodyOverflowing() {

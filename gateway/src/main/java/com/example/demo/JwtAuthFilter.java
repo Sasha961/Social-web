@@ -4,12 +4,18 @@ import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
+import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.StreamingHttpOutputMessage;
 import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
+import java.nio.charset.StandardCharsets;
 
 @Component
 public class JwtAuthFilter extends AbstractGatewayFilterFactory<JwtAuthFilter.Config> {
@@ -18,7 +24,7 @@ public class JwtAuthFilter extends AbstractGatewayFilterFactory<JwtAuthFilter.Co
     private JwtUtil jwtUtil;
 
 
-    public JwtAuthFilter(){
+    public JwtAuthFilter() {
         super(Config.class);
     }
 
@@ -26,9 +32,12 @@ public class JwtAuthFilter extends AbstractGatewayFilterFactory<JwtAuthFilter.Co
     public GatewayFilter apply(Config config) {
         return (exchange, chain) -> {
             ServerHttpRequest request = exchange.getRequest();
-            if (!isAuthMissing(request)){
+            if (!request.getHeaders().containsKey("Authorization")) {
+                return this.onError(exchange, "token not found", HttpStatus.UNAUTHORIZED);
+            }
+            if (!isAuthMissing(request)) {
                 final String token = getAuthHeader(request);
-                if (jwtUtil.isInvalid(token)){
+                if (jwtUtil.isInvalid(token)) {
                     return this.onError(exchange, "header is invalid", HttpStatus.UNAUTHORIZED);
                 }
                 populateRequestWithHeader(exchange, token);
@@ -48,9 +57,11 @@ public class JwtAuthFilter extends AbstractGatewayFilterFactory<JwtAuthFilter.Co
     }
 
     private Mono<Void> onError(ServerWebExchange exchange, String headerIsInvalid, HttpStatus httpStatus) {
-        ServerHttpResponse response =  exchange.getResponse();
+        byte[] bytes = headerIsInvalid.getBytes(StandardCharsets.UTF_8);
+        DataBuffer buffer = exchange.getResponse().bufferFactory().wrap(bytes);
+        ServerHttpResponse response = exchange.getResponse();
         response.setStatusCode(httpStatus);
-        return response.setComplete();
+        return response.writeWith(Flux.just(buffer)).log(headerIsInvalid);
     }
 
     private String getAuthHeader(ServerHttpRequest request) {
@@ -58,15 +69,15 @@ public class JwtAuthFilter extends AbstractGatewayFilterFactory<JwtAuthFilter.Co
     }
 
     private boolean isAuthMissing(ServerHttpRequest request) {
-        if (request.getHeaders().containsKey("Authorization")){
+        if (request.getHeaders().containsKey("Authorization")) {
             return true;
         }
-        if (!request.getHeaders().getOrEmpty("Authorization").get(0).startsWith("Bearer ")){
+        if (!request.getHeaders().getOrEmpty("Authorization").get(0).startsWith("Bearer ")) {
             return true;
         }
         return false;
     }
 
-    public static class Config{
+    public static class Config {
     }
 }

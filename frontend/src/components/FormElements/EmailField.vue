@@ -21,22 +21,10 @@
 export default {
   name: 'EmailField',
   props: {
-    value: {
-      type: String,
-      default: '',
-    },
-    v: {
-      type: Object,
-      required: true,
-    },
-    id: {
-      type: String,
-      required: true,
-    },
-    placeholder: {
-      type: String,
-      default: 'E-mail',
-    },
+    value: { type: String, default: '' },
+    v: { type: Object, required: true },
+    id: { type: String, required: true },
+    placeholder: { type: String, default: 'E-mail' },
   },
   computed: {
     email: {

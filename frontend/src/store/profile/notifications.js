@@ -23,6 +23,8 @@ export default {
           return 'день рождение';
         case 'MESSAGE':
           return 'прислал сообщение';
+        case 'LIKE':
+          return 'поставил лайк'
       }
     },
   },
@@ -41,12 +43,12 @@ export default {
   actions: {
     async fetchNotifications({ commit }) {
       const response = await notifications.get();
-      commit('setNotifications', response.data.data);
+      commit('setNotifications', response.data);
     },
 
     async fetchNotificationsLength({ commit }) {
       const response = await notifications.getLength();
-      commit('setNotificationsLength', response.data.data.count);
+      commit('setNotificationsLength', response.data.count.count);
     },
   },
 };

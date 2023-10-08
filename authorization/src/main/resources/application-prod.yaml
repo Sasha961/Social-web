@@ -1,7 +1,5 @@
 server:
   port: 8084
-  servlet:
-    context-path: /api/v1/auth
   error:
     include-message: always
   remote:
@@ -13,16 +11,17 @@ eureka:
     fetch-registry: true
     service-url:
       defaultZone: http://5.63.154.191:8087/eureka
-    instance:
+  instance:
       hostname: 5.63.154.191
 
 jwt:
-  access-token-duration: 300_000
-  refresh-token-duration: 3_600_000
+  access-token-duration: 43_200_000
+  refresh-token-duration: 86_400_000
+  token_alg: SignatureAlgorithm.HS256
 
 spring:
   application:
-    name: auth-micro-service
+    name: authorization
   config:
     import: optional:secrets.properties
   datasource:
@@ -63,7 +62,7 @@ security:
       filter-order: 3
 
 gtw:
-  users-service: http://${server.remote.address}:8088/users
+  users-service: http://${eureka.instance.hostname}:8088/users
 
 cloud:
   openfeign:
@@ -74,10 +73,12 @@ cloud:
           readTimeout: 5000
           loggerLevel: DEBUG
         users-service:
-          url: http://${server.remote.address}:8085/api/v1
+          url: http://${eureka.instance.hostname}:8088
 
 users-service:
   url: http://${server.remote.address}:8085/api/v1
+  host: 5.63.154.191
+  port: 8085
 
 resilience4j:
   retry:
@@ -103,22 +104,18 @@ resilience4j:
 
 logging:
   level:
-    spring:
-      cloud:
-        openfeign: DEBUG
-        starter:
-          openfeign: DEBUG
-    org:
-      apache:
-        http:
-          wire: INFO
-      springframework:
-        cloud: DEBUG
-        security: DEBUG
-    com:
-      netflix:
-        eureka: INFO
-        discovery: INFO
+    root: INFO
+    spring.cloud.openfeign: INFO
+    org.springframework: INFO
+    org.apache.kafka: INFO
+    org.springframework.web: INFO
+    org.springframework.cloud: INFO
+    org.springframework.security: INFO
+    com.netflix.eureka: INFO
+    com.netflix.eureka.discovery: INFO
+    org.apache.kafka.clients.consumer.ConsumerConfig: WARN
+    org.apache.kafka.clients.producer.ProducerConfig: WARN
+
 
 kafka:
   consumer-enabled: true
@@ -132,7 +129,7 @@ kafka:
       #        protocol: SASL_PLAINTEXT
       protocol: PLAINTEXT
       # Тип, для которого определяем конкретные сериализаторы
-      spring.json.value.default.type: com.skillbox.socialnetwork.dto.kafka.JsonMessage.java
+      spring.json.value.default.type: kafka.model.ru.skillbox.socialnetwork.JsonMessage.java
       spring.deserializer.key.delegate.class: org.apache.kafka.common.serialization.StringDeserializer
       spring.deserializer.value.delegate.class: org.springframework.kafka.support.serializer.JsonDeserializer
   consumer:
@@ -168,3 +165,20 @@ kafka:
     notify: notify-topic
     friends: friends-topic
     admin: admin-topic
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  info:
+    env:
+      enabled: true
+    os:
+      enabled: true
+    java:
+      enabled: true
+    build:
+      enabled: true
+    git:
+      enabled: true

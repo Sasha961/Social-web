@@ -1,9 +1,6 @@
 <template>
   <div class="settings-delete">
-    <h2 class="settings-delete__title">
-      После удаления профиля будет удалена вся связанная с ним информация: друзья, публикации,
-      комментарии, лайки.
-    </h2>
+    <h2 class="settings-delete__title">{{ title }}</h2>
 
     <div class="settings-delete__confirm">
       <input
@@ -11,46 +8,123 @@
         type="checkbox"
         id="confirm"
         v-model="confirm"
+        v-if="!isAccountDeleted"
       />
 
-      <label for="confirm" class="settings-delete__confirm-label">
+      <label v-if="!isAccountDeleted" for="confirm" class="settings-delete__confirm-label">
         Да, удалить мою страницу и всю связаную с ней информацию
       </label>
     </div>
 
     <div class="settings-delete__actions">
-      <button-hover :disable="!confirm" variant="warning" @click.prevent.native="onDelete">
+      <button-hover
+        v-if="!isAccountDeleted"
+        :disable="!confirm"
+        variant="warning"
+        @click.prevent.native="openModal('delete')">
         Удалить профиль
       </button-hover>
 
-      <router-link class="settings-delete__actions-link" :to="{ name: 'Profile' }">
+      <button
+        class="settings-delete__actions-button"
+        @click.prevent="openModal('cancelDelete')"
+        v-if="isAccountDeleted">
         Не удалять профиль, я хочу вернуться
-      </router-link>
+      </button>
     </div>
+    <modal v-model="modalShow">
+      <p v-html="modalText"></p>
+
+      <template slot="actions">
+        <button-hover :showSpinner="showSpinner" @click.native="modalHandler">
+          Ок
+        </button-hover>
+        <button-hover v-if="showBtnCancel" @click.native="closeModal">Отмена</button-hover >
+      </template>
+    </modal>
   </div>
 </template>
 
 <script>
-import { mapActions } from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
+import Modal from "@/components/Modal";
+import ButtonHover from "@/components/ButtonHover";
 
 export default {
   name: 'SettingsDelete',
-
+  components: { Modal, ButtonHover },
   data: () => ({
     confirm: false,
+    modalShow: { show: false, closeModalOnBackdrop: true },
+    modalText: '',
+    modalHandler: null,
+    showSpinner: false,
+    showBtnCancel: true,
   }),
-
+  computed: {
+    ...mapGetters("profile/info", ["getInfo"]),
+    isAccountDeleted() {
+      return this.getInfo.isDeleted
+    },
+    title() {
+      if (this.isAccountDeleted) {
+        return 'Ваш профиль в процессе удаления.'
+      }
+      return `Ваш профиль будет полностью удалён, через 30 дней.
+        После удаления профиля будет удалена вся связанная с ним информация: друзья, публикации,
+        комментарии, лайки.`
+    }
+  },
   methods: {
-    ...mapActions('profile/info', ['deleteInfo']),
+    ...mapActions('profile/info', ['deleteInfo', 'cancelDelete']),
     ...mapActions('auth/api', ['logout']),
 
-    onDelete() {
-      this.deleteInfo().then(() => {
-        this.logout().then(() => {
-          this.$router.push({ name: 'Login' });
-        });
-      });
+    async onDelete() {
+      this.showSpinner = true;
+      try {
+        await this.deleteInfo();
+        this.modalText = `Ваш акаунт в процессе удаления. <br>
+        В течение 30-ти дней вы можете восстановить аккаунт в личном кабинете. <br>
+        Далее произойдёт безвозвратное удаление.`
+        this.showBtnCancel = false;
+        this.modalShow.closeModalOnBackdrop = false;
+        this.modalHandler = this.onLogout
+      } catch(err) {
+        console.log(err)
+      } finally {
+        this.showSpinner = false;
+      }
     },
+    async onCancelDelete() {
+      this.showSpinner = true;
+      try {
+        await this.cancelDelete()
+        this.modalText = 'Ваш аккаунт восстановлен.';
+        this.showBtnCancel = false;
+        this.modalShow.closeModalOnBackdrop = true;
+        this.modalHandler = this.closeModal;
+      } catch(err) {
+        console.log(err)
+      } finally {
+        this.showSpinner = false;
+      }
+    },
+    openModal(action) {
+      this.modalShow.show = true;
+      if (action === 'delete') {
+        this.modalText = 'Вы уверены, что хотите удалить аккаунт?';
+        this.modalHandler = this.onDelete;
+      } else if (action === 'cancelDelete') {
+        this.modalText = 'Вы уверены, что хотите отменить удаление аккаунта?';
+        this.modalHandler = this.onCancelDelete;
+      }
+    },
+    closeModal() {
+      this.modalShow.show = false;
+    },
+    onLogout() {
+      this.logout().then(() => this.$router.push('login'));
+    }
   },
 };
 </script>
@@ -123,8 +197,9 @@ export default {
   display flex
   align-items center
 
-.settings-delete__actions-link
+.settings-delete__actions-button
   font-size 13px
   color eucalypt
   margin-left 20px
+  background transparent
 </style>

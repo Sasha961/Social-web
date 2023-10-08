@@ -1,5 +1,7 @@
 <template>
-  <div class="loader"></div>
+  <div class="disabled-screen">
+    <div class="loader"></div>
+  </div>
 </template>
 
 <style lang="stylus">
@@ -14,7 +16,13 @@
   text-indent -9999em
   animation load4 1.3s infinite linear
   transform translateZ(0)
-
+.disabled-screen
+  position absolute
+  inset 0
+  display flex
+  justify-content center
+  align-items center
+  background-color rgba(0, 0, 0, 0.1)
 
 @keyframes load4
   0%,

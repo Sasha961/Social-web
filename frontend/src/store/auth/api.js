@@ -10,47 +10,80 @@ export default {
     pollingToken: null,
     refreshAttempts: 0,
     isCode: true,
+    alertText: '',
   },
   getters: {
-    apiToken: (s) => s.token,
+    apiToken: (sstate) => sstate.token,
     isAuthenticated: (state) => !!state.token,
-    authStatus: (state) => state.status,
+    authStatus: (state) => {
+      return state.status;
+    },
     getIsCode: (state) => state.isCode,
   },
   mutations: {
-    setJwt: (s) => {
+    setJwt: (state) => {
       const cookie = document.cookie.split('; ').reduce((acc, string) => {
         const [key, value] = string.split('=');
         acc[key] = value;
         return acc;
       }, {});
 
-      s.jwt = cookie.jwt || '';
+      state.jwt = cookie.jwt || '';
+    },
+    setAlertText: (state, errorObj) => {
+      let alertMessage = '';
+      const res = errorObj?.response;
+      if (res?.statusText === 'Unauthorized') {
+        alertMessage = 'Неверный логин или пароль';
+      } else if (res?.statusText === 'Conflict') {
+        alertMessage = 'Пользователь с таким email уже зарегестрирован';
+      } else if (res?.data === 'Wrong captcha answer') {
+        alertMessage = 'Неверный код с картинки'
+      } else {
+        alertMessage = `Что-то пошло не так: ${ errorObj?.message }`;
+      }
+      state.alertText = alertMessage;
     },
 
-    setToken: (s, token) => (s.token = token),
-    setIsCode: (s, isCode) => (s.isCode = isCode),
-    setStatus: (s, status) => (s.status = status),
-    addAttempts: (s) => (s.refreshAttempts = s.refreshAttempts + 1),
-    resetAttempts: (s) => (s.resetAttmpts = 0),
+    setToken: (state, token) => (state.token = token),
+    setIsCode: (state, isCode) => (state.isCode = isCode),
+    setStatus: (state, status) => (state.status = status),
+    addAttempts: (state) => (state.refreshAttempts = state.refreshAttempts + 1),
+    resetAttempts: (state) => (state.resetAttmpts = 0),
     setPollingInterval(state, interval) {
       state.pollingToken = interval;
     },
   },
   actions: {
-    async register({ dispatch }, user) {
-      await auth.register(user);
+    async register({ dispatch, commit, state }, user) {
+      commit('setStatus', 'loading');
+      try {
+        await auth.register(user);
+        commit('setStatus', 'success');
+        commit('setIsCode', true)
+        dispatch(
+          'global/alert/setAlert',
+          { status: 'success', text: 'Регистрация прошла успешно' },
+          { root: true }
+        );
+      } catch (err) {
+        console.dir(err)
+        if (err?.response?.data === 'Wrong captcha answer') {
+          commit('setIsCode', false)
+        }
+        commit('setStatus', err);
+        commit('setAlertText', err);
 
-      dispatch(
-        'global/alert/setAlert',
-        { status: 'success', text: 'Зарегистрирован, делаю логин' },
-        { root: true }
-      );
-
-      await dispatch('login', {
-        email: user.email,
-        password: user.password1,
-      });
+        dispatch(
+          'global/alert/setAlert',
+          { status: 'error', text: state.alertText },
+          { root: true }
+        );
+      }
+      // await dispatch('login', {
+      //   email: user.email,
+      //   password: user.password1,
+      // });
     },
     // pollingToken({ commit, dispatch }) {
     //   const interval = setInterval(() => {
@@ -85,10 +118,11 @@ export default {
       }
     },
 
-    async login({ commit, dispatch }, user) {
+    async login({ commit, dispatch, state }, user) {
       commit('setStatus', 'loading');
       try {
         const response = await auth.login(user);
+        console.dir(response)
         const { accessToken, refreshToken } = response.data;
 
         localStorage.setItem('user-token', accessToken);
@@ -99,15 +133,24 @@ export default {
 
         commit('setJwt');
         commit('setToken', accessToken);
-        commit('setStatus', 'success');
-        commit('profile/info/setInfo', response.data, {
-          root: true,
-        });
+        commit('setStatus', '');
+        commit('profile/info/setInfo', response.data, { root: true });
+        dispatch(
+          'global/alert/setAlert',
+          { status: 'success', text: 'Авторизация прошла успешно' },
+          { root: true }
+        );
 
         dispatch('pollingToken');
       } catch (error) {
-        commit('setStatus', 'error');
-
+        commit('setStatus', error);
+        console.dir(error);
+        commit('setAlertText', error)
+        dispatch(
+          'global/alert/setAlert',
+          { status: 'error', text: state.alertText },
+          { root: true }
+        );
         localStorage.removeItem('user-token');
         localStorage.removeItem('refresh-token');
 

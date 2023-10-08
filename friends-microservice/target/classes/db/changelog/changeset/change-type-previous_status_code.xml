@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.20.xsd">
+
+    <changeSet id="create-all-tables" author="ereme">
+        <dropColumn columnName="previous_status_code"
+                    schemaName="public"
+                    tableName="status">
+        </dropColumn>
+
+        <addColumn schemaName="public"
+                   tableName="status">
+            <column name="previous_status_code"
+                    type="VARCHAR(255)"/>
+        </addColumn>
+    </changeSet>
+</databaseChangeLog>

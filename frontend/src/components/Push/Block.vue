@@ -1,27 +1,26 @@
 <template>
   <div class="push-block">
-    <div class="push__img" v-if="info.author.photo">
-      <img :src="info.author.photo" :alt="info.author.firstName[0]" />
+    <div class="push__img" v-if="photoSrc">
+      <img :src="photoSrc" :alt="firstName[0]" />
     </div>
-
     <div class="push__img" v-else>
       <div>
-        {{ info.author.firstName[0] + ' ' + info.author.lastName[0] }}
+        {{ firstName[0] + ' ' + lastName[0] }}
       </div>
     </div>
-
     <p class="push__content">
-      <router-link class="push__content-name" :to="getRouteByNotification(info)">
-        <span class="push__content-preview">{{ info.content }}</span>
-        {{ getNotificationsTextType(info.notificationType) }}
-        «{{ info.author.firstName + ' ' + info.author.lastName }}»
+      <router-link class="push__content-name" :to="getRouteByNotification(notificationType, authorId)">
+        <span class="push__content-preview">{{ content }}</span>
+        <span>
+          <span class="push__notif-author">«{{ firstName + ' ' + lastName }}»</span>
+          <span class="push__notif-type"> {{ getNotificationsTextType(notificationType) }}</span>
+        </span>
       </router-link>
     </p>
 
-    <span class="push__time">{{ info.sentTime | moment('from') }}</span>
+    <span class="push__time">{{ sentTime | moment('from') }}</span>
   </div>
 </template>
-
 <script>
 import { mapGetters } from 'vuex';
 import { getRouteByNotification } from '@/utils/notifications.utils.js';
@@ -33,6 +32,27 @@ export default {
   },
   computed: {
     ...mapGetters('profile/notifications', ['getNotificationsTextType']),
+    photoSrc() {
+      return this.info.data.author.photo;
+    },
+    firstName() {
+      return this.info.data.author.firstName;
+    },
+    lastName() {
+      return this.info.data.author.lastName;
+    },
+    content() {
+      return this.info.data.content;
+    },
+    notificationType() {
+      return this.info.data.notificationType;
+    },
+    authorId() {
+      return this.info.data.authorId;
+    },
+    sentTime() {
+      return this.info.data.sentTime;
+    }
   },
   methods: {
     getRouteByNotification,
@@ -86,4 +106,11 @@ export default {
     width 100%
     height 100%
     object-fit cover
+.push__content-name
+  display grid
+.push__notif-type
+  font-weight 400
+.push__content-preview {
+  margin-bottom 8px
+}
 </style>

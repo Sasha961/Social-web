@@ -2,9 +2,19 @@
 <project version="4">
   <component name="RemoteRepositoriesConfiguration">
     <remote-repository>
+      <option name="id" value="storage" />
+      <option name="name" value="storage" />
+      <option name="url" value="http://5.63.154.191:8081/repository/storage/" />
+    </remote-repository>
+    <remote-repository>
       <option name="id" value="central" />
       <option name="name" value="Central Repository" />
       <option name="url" value="https://repo.maven.apache.org/maven2" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="nexus-releases" />
+      <option name="name" value="nexus-repository" />
+      <option name="url" value="http://5.63.154.191:8081/repository/maven-releases" />
     </remote-repository>
     <remote-repository>
       <option name="id" value="central" />

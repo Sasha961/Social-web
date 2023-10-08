@@ -1,6 +1,7 @@
 package com.user.kafka;
 
-import com.user.dto.JsonMessage;
+import com.user.dto.account.AccountCountPerAge;
+import com.user.dto.account.AccountForFriends;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.springframework.beans.factory.annotation.Value;
@@ -30,7 +31,7 @@ public class KafkaProducerConfig {
 	}
 
 	@Bean
-	public ProducerFactory<String, JsonMessage> producerFactoryJSON() {
+	public ProducerFactory<String, AccountForFriends> producerFactoryForJson() {
 		Map<String, Object> configProps = new HashMap<>();
 		configProps.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapAddress);
 		configProps.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
@@ -39,12 +40,12 @@ public class KafkaProducerConfig {
 	}
 
 	@Bean
-	public KafkaTemplate<String, JsonMessage> jsonKafkaTemplate() {
-		return new KafkaTemplate<>(producerFactoryJSON());
+	public KafkaTemplate<String, String> kafkaTemplate() {
+		return new KafkaTemplate<>(producerFactory());
 	}
 
 	@Bean
-	public KafkaTemplate<String, String> kafkaTemplate() {
-		return new KafkaTemplate<>(producerFactory());
+	public KafkaTemplate<String, AccountForFriends> AccountForFriendskafkaTemplate() {
+		return new KafkaTemplate<>(producerFactoryForJson());
 	}
 }

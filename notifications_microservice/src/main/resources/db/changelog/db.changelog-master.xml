@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd"
+>
+<preConditions>
+        <runningAs  username="selectel"/>
+</preConditions>
+        <include file="create-changeset-notifications-common.xml" relativeToChangelogFile="true"/>
+        <include file="create-changeset-author.xml" relativeToChangelogFile="true"/>
+        <include file="create-changeset-notifications-simple.xml" relativeToChangelogFile="true"/>
+        <include file="create-changeset-notifications-stamped.xml" relativeToChangelogFile="true"/>
+        <include file="create-changeset-notifications-constraint.xml" relativeToChangelogFile="true"/>
+        <include file="create-changeset-notifications-settings.xml" relativeToChangelogFile="true"/>
+        <include file="create-changeset-notifications-settings-add-user-id-constraint.xml" relativeToChangelogFile="true"/>
+        <include file="create-changeset-notifications-settings-change-columns.xml" relativeToChangelogFile="true"/>
+        <include file="create-changeset-notifications-settings-change-column-comment-comment.xml" relativeToChangelogFile="true"/>
+        <include file="create-changeset-notifications-settings-change-column-LIKE-like.xml" relativeToChangelogFile="true"/>
+        <include file="create-changeset-notifications-settings-change-column-LIKE-like2.xml" relativeToChangelogFile="true"/>
+        <include file="create-changeset-notifications-simple-consumer-nullable-true.xml" relativeToChangelogFile="true"/>
+        <include file="create-changeset-notifications-settings-change-column-comment-post-comment.xml" relativeToChangelogFile="true"/>
+</databaseChangeLog>

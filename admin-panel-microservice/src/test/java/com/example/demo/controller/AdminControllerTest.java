@@ -1,7 +1,7 @@
 package com.example.demo.controller;
 
 
-import com.example.demo.controller.feignClient.ControllerFromUsers;
+import com.example.demo.controller.feignClient.UsersControllerFeign;
 import com.example.demo.dto.account.AccountDto;
 import com.example.demo.dto.account.User;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -35,7 +35,7 @@ public class AdminControllerTest {
     private MockMvc mockMvc;
 
     @MockBean
-    private ControllerFromUsers controllerFromUsers;
+    private UsersControllerFeign controllerFromUsers;
 
     @Test
     @WithMockUser(username = "admin", roles = "ADMIN")

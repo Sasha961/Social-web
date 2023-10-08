@@ -13,21 +13,27 @@
 
         <password-field
           id="register-password"
-          v-model="password1"
-          :v="$v.password1"
+          v-model="password"
+          :v="$v.password"
           info
           registration
           :class="{
-            checked: $v.password1.required && $v.password2.sameAsPassword && $v.password1.minLength,
+            checked:
+              $v.password.required &&
+              $v.confirmPassword.sameAsPassword &&
+              $v.password.minLength,
           }"
         />
 
         <password-repeat-field
           id="register-repeat-password"
-          v-model="password2"
-          :v="$v.password2"
+          v-model="confirmPassword"
+          :v="$v.confirmPassword"
           :class="{
-            checked: $v.password1.required && $v.password2.sameAsPassword && $v.password2.minLength,
+            checked:
+              $v.password.required &&
+              $v.confirmPassword.sameAsPassword &&
+              $v.confirmPassword.minLength,
           }"
         />
       </div>
@@ -36,46 +42,57 @@
 
         <name-field id="register-firstName" v-model="firstName" :v="$v.firstName" />
 
-        <name-field id="register-lastName" v-model="lastName" :v="$v.lastName" label="Фамилия" />
+        <name-field
+          id="register-lastName"
+          v-model="lastName"
+          :v="$v.lastName"
+          label="Фамилия"
+        />
       </div>
+
       <div class="form__block">
         <h4 class="form__subtitle">Введите символы, которые вы видите на экране</h4>
-
-        <button class="btn__update bold" @click.prevent="updateCatcha">Обновить</button>
-
-        <div class="img_captcha">
-          <img :src="imgCode" :alt="'image'" />
+        <div class="img_captcha captcha-box">
+          <btn-spinner v-if="isCaptchaLoading" class="captcha-box__spinner" size="40px" />
+          <img :src="getCaptchaSrc" alt="Капча" v-else />
         </div>
-
         <code-field
           id="register-code"
           v-model="code"
           :v="$v.code"
           :class="{ checked: $v.code.required && $v.code.isCode }"
         />
-
+        <button class="btn__update bold" @click.prevent="updateCaptcha">Обновить</button>
         <confirm-field id="register-confirm" v-model="confirm" :v="$v.confirm" />
       </div>
-
       <div class="registration__action">
-        <button-hover tag="button" type="submit" variant="white">Зарегистрироваться</button-hover>
+        <button-hover
+          type="submit"
+          tag="button"
+          variant="white"
+          spinnerColor="#21a45d"
+          :showSpinner="authStatus === 'loading'"
+        >Зарегистрироваться</button-hover
+        >
       </div>
     </form>
   </div>
 </template>
 
 <script>
-import { mapGetters, mapActions } from 'vuex';
-import { required, email, minLength, sameAs } from 'vuelidate/lib/validators';
-import PasswordField from '@/components/FormElements/PasswordField';
-import PasswordRepeatField from '@/components/FormElements/PasswordRepeatField';
-import EmailField from '@/components/FormElements/EmailField';
-import NameField from '@/components/FormElements/NameField';
-import CodeField from '@/components/FormElements/CodeField';
-import ConfirmField from '@/components/FormElements/ConfirmField';
+import { mapGetters, mapActions } from "vuex";
+import { required, email, minLength, sameAs } from "vuelidate/lib/validators";
+import PasswordField from "@/components/FormElements/PasswordField";
+import PasswordRepeatField from "@/components/FormElements/PasswordRepeatField";
+import EmailField from "@/components/FormElements/EmailField";
+import NameField from "@/components/FormElements/NameField";
+import CodeField from "@/components/FormElements/CodeField";
+import ConfirmField from "@/components/FormElements/ConfirmField";
+import ButtonHover from "@/components/ButtonHover";
+import BtnSpinner from "@/components/BtnSpinner.vue";
 
 export default {
-  name: 'Registration',
+  name: "Registration",
   components: {
     PasswordField,
     EmailField,
@@ -83,23 +100,26 @@ export default {
     CodeField,
     ConfirmField,
     PasswordRepeatField,
+    ButtonHover,
+    BtnSpinner,
   },
-
   data: () => ({
-    email: '',
-    password1: '',
-    password2: '',
-    firstName: '',
-    lastName: '',
-    imgCode: '',
-    code: '',
-    token: '',
-    confirm: false,
-    isCode: false,
+    email: "",
+    password: "",
+    confirmPassword: "",
+    firstName: "",
+    lastName: "",
+    confirm: true,
+    code: "",
+    isCode: true,
+    isCaptchaLoading: false,
   }),
-
   computed: {
-    ...mapGetters('auth/captcha', ['getCaptcha']),
+    ...mapGetters("auth/captcha", ["getCaptcha"]),
+    ...mapGetters("auth/api", ["authStatus", 'getIsCode']),
+    getCaptchaSrc() {
+      return `data:image/png;base64,${this.getCaptcha}`;
+    },
   },
   watch: {
     code() {
@@ -108,64 +128,59 @@ export default {
       }
     },
   },
-
-  beforeMount() {
-    this.updateCatcha();
+  async beforeMount() {
+    await this.updateCaptcha();
   },
-
-  mounted() {
-    // this.code = this.getCode;
-  },
-
   methods: {
-    ...mapActions('auth/api', ['register']),
-    ...mapActions('auth/captcha', ['fetchCaptcha']),
-
-    updateCatcha() {
-      this.fetchCaptcha().then(() => {
-        this.imgCode = this.getCaptcha.imgCode;
-        this.token = this.getCaptcha.secret;
-      });
+    ...mapActions("auth/api", ["register"]),
+    ...mapActions("auth/captcha", ["fetchCaptcha"]),
+    async updateCaptcha() {
+      this.isCaptchaLoading = true;
+      try {
+        await this.fetchCaptcha();
+      } finally {
+        this.isCaptchaLoading = false;
+      }
     },
 
-    submitHandler() {
+    async submitHandler() {
       if (this.$v.$invalid) {
         this.$v.$touch();
         return;
       }
-      const { email, password1, password2, firstName, lastName, code, token } = this;
-      this.register({
-        email,
-        password1,
-        password2,
-        firstName,
-        lastName,
-        code,
-        token,
-      })
-        .then(() => {
-          this.$router.push({ name: 'RegisterSuccess' });
-        })
-        .catch((error) => {
-          const errorMessage = error.response.data.error_description[0] || '';
-          if (errorMessage === 'Неверный код авторизации') {
-            this.isCode = false;
-          }
+      const { email, password, confirmPassword, firstName, lastName, code } = this;
+        await this.register({
+          id: null,
+          isDeleted: null,
+          email,
+          password,
+          confirmPassword,
+          firstName,
+          lastName,
+          captchaCode: code,
+          captchaSecret: null,
         });
+        if (this.authStatus === "success") {
+          this.$router.push({ name: "Login" });
+        }
+        this.isCode = this.getIsCode
+        if (!this.isCode) this.updateCaptcha()
     },
   },
-
   validations: {
     confirm: { sameAs: sameAs(() => true) },
     email: { required, email },
-    password1: { required, minLength: minLength(8) },
-    password2: {
+    password: {
       required,
       minLength: minLength(8),
-      sameAsPassword: sameAs('password1'),
     },
-    firstName: { required, minLength: minLength(3) },
-    lastName: { required, minLength: minLength(3) },
+    confirmPassword: {
+      required,
+      minLength: minLength(8),
+      sameAsPassword: sameAs("password"),
+    },
+    firstName: { required, minLength: minLength(2) },
+    lastName: { required, minLength: minLength(2) },
     code: {
       required,
       isCode() {
@@ -193,12 +208,4 @@ export default {
 
 .img_captcha
   margin-bottom 15px
-
-.btn__update
-  margin-bottom 15px
-  width 90px
-  height 30px
-  padding 1px
-  background-color white
-  color #21a45d
 </style>

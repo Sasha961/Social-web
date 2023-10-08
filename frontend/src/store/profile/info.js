@@ -5,11 +5,14 @@ export default {
   namespaced: true,
   state: {
     info: null,
+    status: ''
   },
 
   getters: {
     getInfo(state) {
-      if (!state.info) return;
+      if (!state.info) {
+        return;
+      }
       const result = {
         ...state.info,
       };
@@ -25,24 +28,41 @@ export default {
 
   actions: {
     async apiInfo({ commit }) {
-      const response = await account.get();
-      commit('setInfo', response.data);
+      try {
+        const response = await account.get();
+        commit('setInfo', response.data);
+      } catch(err) {
+        localStorage.removeItem('refresh-token');
+        localStorage.removeItem('user-token');
+        throw err;
+      }
     },
 
     async apiChangeInfo({ commit, dispatch }, user) {
-      const response = await account.edit(user);
-
-      dispatch(
-        'global/alert/setAlert',
-        { status: 'success', text: 'Информация обновлена' },
-        { root: true }
-      );
-
-      commit('setInfo', response.data.data);
+      try {
+        const response = await account.edit(user);
+        commit('setInfo', response.data);
+        dispatch(
+          'global/alert/setAlert',
+          { status: 'success', text: 'Ваши данные обновлены' },
+          { root: true }
+        );
+      } catch(err) {
+        console.dir(err)
+        dispatch('global/alert/setAlert',
+          { status: 'error', text: `Не удалось обновить данные пользователя: ${err}` },
+          { root: true }
+        );
+      }
     },
 
-    async deleteInfo() {
+    async deleteInfo({ dispatch }) {
       await account.delete();
+      dispatch('apiInfo')
     },
+    async cancelDelete({ dispatch }) {
+      await account.cancelDelete();
+      dispatch('apiInfo')
+    }
   },
 };

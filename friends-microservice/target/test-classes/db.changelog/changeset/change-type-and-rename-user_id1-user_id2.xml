@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.20.xsd">
+
+    <changeSet id="change-type-and-rename-user_id1-user_id2" author="ereme">
+        <dropColumn columnName="user_id1"
+                     schemaName="public"
+                     tableName="status">
+        </dropColumn>
+        <dropColumn columnName="user_id2"
+                    schemaName="public"
+                    tableName="status">
+        </dropColumn>
+        <addColumn schemaName= "public"
+                   tableName="status">
+            <column name="user_to"
+                    type="bigint"/>
+        </addColumn>
+        <addColumn schemaName= "public"
+                   tableName="status">
+            <column name="user_from"
+                    type="bigint"/>
+        </addColumn>
+    </changeSet>
+</databaseChangeLog>

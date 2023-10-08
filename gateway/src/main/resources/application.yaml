@@ -6,57 +6,69 @@ spring:
     name: gateway
   cloud:
     gateway:
+      default-filters:
+        - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin, RETAIN_UNIQUE
+#        - AddResponseHeader=Access-Control-Allow-Credentials, true
       globalcors:
-        corsConfiguration:
+        add-to-simple-url-handler-mapping: true
+        corsConfigurations:
           '[/**]':
-            allowedOrigins: "http://5.63.154.191:8098"
+#            allowedOrigins: "http://5.63.154.191:8098"
+            allowedOrigins: "http://localhost:8098"
+            allowCredentials: true
             allowedMethods:
               - GET
               - POST
               - DELETE
-              - UPDATE
               - PUT
+              - OPTIONS
             allowedHeaders:
-              - authorization
-              - content-type
-              - x-requested-with
-              - cache-control
+              - Access-Control-Allow-Credentials
+              - Access-Control-Allow-Origin
+              - Authorization
+              - Content-type
+              - X-requested-with
+              - Cache-Control
               - x-xsrf-token
-              - accept
-              - origin
-              - x-file-name
+              - Accept
+              - Origin
+              - X-file-name
+              - content-type
+              - authorization
       routes:
         - id: admin-panel
           uri: lb://ADMIN-PANEL
           predicates:
-            - Path=/admin/**
+            - Path=/admin-panel/**
           filters:
             - JwtAuthFilter
+            - StripPrefix=1
+            - PrefixPath=/api/v1/admin-console
         - id: auth-service
-          uri: lb://AUTH-MICRO-SERVICE
+          uri: lb://AUTHORIZATION
           predicates:
             - Path=/auth/**
           filters:
             - StripPrefix=1
             - PrefixPath=/api/v1/auth
         - id: users-service
-          uri: lb://USERS_MS
+          uri: lb://USERS
           predicates:
             - Path=/users/**
           filters:
             - StripPrefix=1
-            - PrefixPath=/api/v1/account
-            - JwtAuthFilter
+            - PrefixPath=/api/v1
+#            - JwtAuthFilter
         - id: messages-service
           uri: lb://MESSAGE-SERVICE
           predicates:
-            - Path=/messages/**
+            - Path=/dialogs/**
           filters:
             - StripPrefix=1
             - PrefixPath=/api/v1/dialogs
             - JwtAuthFilter
         - id: notifications-service
-          uri: lb://NOTIFICATIONS-SERVICE
+          uri: lb://NOTIFICATIONS
           predicates:
             - Path=/notifications/**
           filters:
@@ -71,7 +83,22 @@ spring:
             - StripPrefix=1
             - PrefixPath=/api/v1/friends
             - JwtAuthFilter
-
+        - id: search-service
+          uri: lb://SEARCH
+          predicates:
+            - Path=/search/**
+          filters:
+            - StripPrefix=1
+            - PrefixPath=/api/v1/search
+            - JwtAuthFilter
+        - id: posts-service
+          uri: lb://POSTS
+          predicates:
+            - Path=/post/**
+          filters:
+            - StripPrefix=1
+            - PrefixPath=/api/v1/post/
+            - JwtAuthFilter
 
 
 jwt:
@@ -85,4 +112,4 @@ eureka:
     service-url:
       defaultZone: http://5.63.154.191:8087/eureka
   instance:
-    hostname: 5.63.154.19
+    hostname: 5.63.154.191

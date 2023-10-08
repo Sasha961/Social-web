@@ -65,7 +65,7 @@ export default {
       let newSetting = [...state.notifications];
       newSetting.map((el) => {
         const foundElem = notifications.find((item) => {
-          return item.notification_type === el.type;
+          return item.notificationType === el.type;
         });
         el.enable = foundElem.enable;
         return el;

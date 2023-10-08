@@ -1,7 +1,7 @@
 server:
   port: 8084
   servlet:
-    context-path: /api/v1/auth
+    context-path: /api/v1
   error:
     include-message: always
   remote:
@@ -14,7 +14,7 @@ eureka:
     service-url:
       defaultZone: http://5.63.154.191:8087/eureka
   instance:
-    hostname: 5.63.154.191
+      hostname: 5.63.154.191
 
 
 jwt:
@@ -63,9 +63,6 @@ security:
     resource:
       filter-order: 3
 
-gtw:
-  users-service: http://${server.remote.address}:8088/users
-
 cloud:
   openfeign:
     client:
@@ -104,26 +101,19 @@ resilience4j:
 
 logging:
   level:
-    spring:
-      cloud:
-        openfeign: DEBUG
-        starter:
-          openfeign: DEBUG
-    org:
-      apache:
-        http:
-          wire: INFO
-      springframework:
-        cloud: DEBUG
-        security: DEBUG
-    com:
-      netflix:
-        eureka: INFO
-        discovery: INFO
+    root: INFO
+    spring.cloud.openfeign: INFO
+    org.springframework: INFO
+    org.apache.kafka: INFO
+    org.springframework.web: INFO
+    org.springframework.cloud: INFO
+    org.springframework.security: INFO
+    com.netflix.eureka: INFO
+    com.netflix.eureka.discovery: INFO
 
 kafka:
   consumer-enabled: true
-  bootstrap-servers: localhost:9092,localhost:9093
+  bootstrap-servers: 5.63.154.191:9092,5.63.154.191:9093
   properties:
     #      sasl:
     #        jaas:
@@ -133,7 +123,7 @@ kafka:
       #        protocol: SASL_PLAINTEXT
       protocol: PLAINTEXT
       # Тип, для которого определяем конкретные сериализаторы
-      spring.json.value.default.type: com.skillbox.socialnetwork.dto.kafka.JsonMessage.java
+      spring.json.value.default.type: kafka.model.ru.skillbox.socialnetwork.JsonMessage.java
       spring.deserializer.key.delegate.class: org.apache.kafka.common.serialization.StringDeserializer
       spring.deserializer.value.delegate.class: org.springframework.kafka.support.serializer.JsonDeserializer
   consumer:

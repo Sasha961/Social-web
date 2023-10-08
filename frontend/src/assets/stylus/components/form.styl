@@ -28,6 +28,7 @@
 
 .form__group
   position relative
+  margin-bottom 25px
   &:after
     content ''
     display block
@@ -99,7 +100,7 @@
 .form__password-icon
   position absolute
   right 10px
-  bottom 14px
+  top 5px
   opacity 0
   visibility hidden
   width 19px
@@ -147,18 +148,15 @@
     width 100%
     background-color cyan
 
-.form__error
-  font-size 10px
-  position absolute
-  bottom -15px
-  left 0
-  color rgba(255, 255, 255, 0.7);
-
 .form__checkbox
-  visibility hidden
   opacity 0
   height 0
   width 0
+  &:focus-visible
+    & + .form__checkbox-label
+      &:before
+        background-color: #fff
+
   &:checked
     & + .form__checkbox-label
       &:before
@@ -170,7 +168,6 @@
     & + .form__checkbox-label
       &:before
         border-color wild-watermelon
-
 .form__checkbox-label
   cursor pointer
   font-size 13px
@@ -200,11 +197,24 @@
     transform rotate(30deg);
     opacity 0
     visibility hidden
-  a
-    color rgba(255, 255, 255, 0.7)
-    transition all .2s
-    &:hover
-      color #fff
+.form__link
+  position relative
+  display: inline-block
+  color rgba(255, 255, 255, 0.7)
+  transition: color 0.2s ease
+  &::before
+    content: ''
+    position: absolute
+    border-bottom: 1px solid transparent
+    width: 100%
+    bottom -1px
+    transition border-color 0.2s ease
+  &:focus::before
+    border-bottom-color: #fff 
+  &:hover
+    color: #fff
+
+
 
 @-webkit-keyframes autofill
   to

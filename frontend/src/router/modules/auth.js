@@ -51,7 +51,7 @@ export default [
     component: () => import('@/pages/Auth/ForgotSuccess.vue'),
   },
   {
-    path: '/api/v1/auth/password/recovery/:secret',
+    path: '/auth/password/recovery/:secret',
     redirect: '/change-password/:secret',
   },
   {

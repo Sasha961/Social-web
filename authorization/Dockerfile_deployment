@@ -1,0 +1,6 @@
+FROM adoptopenjdk/openjdk11
+ARG JAR_FILE=/target/authorization-0.0.14-SNAPSHOT.jar
+WORKDIR /opt/buildagent/work
+EXPOSE 8084
+COPY ${JAR_FILE} authorization.jar
+CMD ["java","-jar", "authorization.jar"]

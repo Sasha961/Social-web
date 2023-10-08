@@ -1,5 +1,5 @@
 FROM adoptopenjdk/openjdk11:alpine-jre
-ARG JAR_FILE=target/friends-0.0.1-SNAPSHOT.jar
+ARG JAR_FILE=target/friends-microservice-0.0.1-SNAPSHOT.jar
 WORKDIR /opt/friends-ms
 COPY ${JAR_FILE} friends-ms.jar
 EXPOSE 8083

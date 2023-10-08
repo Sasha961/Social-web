@@ -1,0 +1,141 @@
+server:
+  port: 8086
+  remote:
+    address: 5.63.154.191
+
+jpa:
+  show-sql: true
+  defer-datasource-initialization: true
+  hibernate:
+    ddl-auto: none
+
+spring:
+  application:
+    name: notifications
+  output:
+    ansi:
+      enabled: always
+
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+  datasource:
+    platform: postgres
+    driverClassName: org.postgresql.Driver
+    url: jdbc:postgresql://5.63.154.191:5432/notifications
+    username: selectel
+    password: selectel
+  liquibase:
+    change-log: classpath:db/changelog/db.changelog-master.xml
+
+liquibase:
+  enabled: true
+  drop-first: false
+  default-schema: public
+
+jwt:
+  access-token-duration: 43_200_000
+  refresh-token-duration: 86_400_000
+  token_alg: SignatureAlgorithm.HS256
+
+gtw:
+  users-service: http://${eureka.instance.hostname}:8088/users
+  friends-service: http://${eureka.instance.hostname}:8088/friends
+
+cloud:
+  openfeign:
+    client:
+      config:
+        default:
+          connectTimeout: 5000
+          readTimeout: 5000
+          loggerLevel: DEBUG
+        users-service:
+          url: http://${eureka.instance.hostname}:8088
+
+users-service:
+  url: http://${server.remote.address}:8085/api/v1
+  host: 5.63.154.191
+  port: 8085
+friends-service:
+  url: http://${server.remote.address}:8083/api/v1
+  host: 5.63.154.191
+  port: 8083
+
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://${server.remote.address}:8087/eureka
+  instance:
+    hostname: ${server.remote.address}
+
+kafka:
+  consumer-enabled: true
+  bootstrap-servers: 5.63.154.191:9092,5.63.154.191:9093
+  properties:
+    #      sasl:
+    #        jaas:
+    #          config: org.apache.common.common.security.plain.PlainLoginModule required username=${kafka_username:'admin'} password=${kafka_password:'admin-secret'};
+    #        mechanism: PLAIN
+    security:
+      #        protocol: SASL_PLAINTEXT
+      protocol: PLAINTEXT
+      # Тип, для которого определяем конкретные сериализаторы
+      spring.json.value.default.type: common.dto.ru.skillbox.socialnetwork.KafkaMessage.java
+      spring.deserializer.key.delegate.class: org.apache.common.common.serialization.StringDeserializer
+      spring.deserializer.value.delegate.class: org.springframework.common.support.serializer.JsonDeserializer
+  consumer:
+    auto-offset-reset: earliest
+    group-id: ${spring.application.name}
+    # Сериализаторы для всех типов
+    key-deserializer: org.apache.common.common.serialization.StringDeserializer
+    value-deserializer: org.apache.common.common.serialization.JsonDeserializer
+    max-poll-records: 1
+    fetch-max-wait: 36000
+    enable-auto-commit: false
+
+  producer:
+    client-id: ${spring.application.name}
+    key-serializer: org.apache.common.common.serialization.StringSerializer
+    # Очередь для исключений
+    value-serializer: org.apache.common.common.serialization.JsonDeserializer
+    retries: 2
+
+  #    jaas:
+  #      enabled: true
+  listener:
+    poll-timeout: 1800000
+    concurrency: 1
+    # ack-mode: manual_immediate
+    # Получение каждой записи должно быть подтверждено
+    ack-mode: RECORD
+  topics:
+    auth: auth-topic
+    users: users-topic
+    posts: posts-topic
+    msg: msg-topic
+    notify: notify-topic
+    notify-common: notify-topic-common
+    friends: friends-topic
+    admin: admin-topic
+  backoff:
+    interval: 1000
+    max_attempts: 3
+
+logging:
+  level:
+    root: INFO
+    spring.cloud.openfeign: INFO
+    org.springframework: INFO
+    org.apache.kafka: INFO
+    org.springframework.web: INFO
+    org.springframework.cloud: INFO
+    org.springframework.security: INFO
+    com.netflix.eureka: INFO
+    com.netflix.eureka.discovery: INFO
+    org.apache.kafka.clients.consumer.ConsumerConfig: WARN
+    org.apache.kafka.clients.producer.ProducerConfig: WARN
+    org.apache.kafka.clients.consumer.internals.ConsumerCoordinator: WARN
+    org.apache.kafka.clients.Metadata: WARN
+    org.springframework.kafka.listener.KafkaMessageListenerContainer: WARN

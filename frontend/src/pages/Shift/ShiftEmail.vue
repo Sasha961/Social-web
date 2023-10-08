@@ -49,7 +49,6 @@ export default {
     EmailField,
     CodeField,
   },
-
   data: () => ({
     email: '',
     imgCode: '',
@@ -57,19 +56,15 @@ export default {
     isCode: true,
     temp: '',
   }),
-
   computed: {
     ...mapGetters('auth/captcha', ['getCaptcha']),
   },
-
   beforeMount() {
     this.updateCaptcha();
   },
-
   mounted() {
     this.temp = this.$route.query.temp || '';
   },
-
   methods: {
     ...mapActions('profile/account', ['changeEmail']),
     ...mapActions('auth/captcha', ['fetchCaptcha']),
@@ -130,12 +125,4 @@ export default {
   margin-top 40px
 .img_captcha
   margin-bottom 15px
-
-.btn__update
-  margin-bottom 15px
-  width 90px
-  height 30px
-  padding 1px
-  background-color white
-  color #21a45d
 </style>

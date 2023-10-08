@@ -1,9 +1,6 @@
 package com.example.demo.service;
 
-import com.example.demo.controller.feignClient.ControllerFromPosts;
-import com.example.demo.controller.feignClient.ControllerFromUsers;
 import com.example.demo.dto.statistic.AllStatisticDto;
-import com.example.demo.dto.statistic.PostStatisticRequestDto;
 import com.example.demo.dto.statistic.StatisticPerDateDto;
 import com.example.demo.dto.statistic.StatisticResponseDto;
 import org.junit.jupiter.api.Assertions;
@@ -56,9 +53,6 @@ public class StatisticServiceTest {
     public void getAllStatisticTest() {
 
         AllStatisticDto allStatisticDto = new AllStatisticDto();
-
-
-        allStatisticDto.setLikes(500L);
 
         Assertions.assertEquals(statisticService.getAllStatistic(), allStatisticDto);
     }

@@ -10,10 +10,7 @@
     />
 
     <label :for="id" class="form__checkbox-label">
-      <span>Я согласен с </span>
-      <a href="#">полит. конф-ти</a>
-      <span> и передачей </span>
-      <a href="">перс. данных</a>
+      <span>Я согласен с <a class="form__link" href="#">полит. конф-ти</a> и передачей <a class="form__link" href="#">перс. данных</a></span>
     </label>
   </div>
 </template>

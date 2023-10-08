@@ -21,18 +21,13 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
-			<version>3.1.0</version>
 		</dependency>
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
 		</dependency>
-		<dependency>
-			<groupId>org.projectlombok</groupId>
-			<artifactId>lombok</artifactId>
-			<optional>true</optional>
-		</dependency>
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
@@ -40,11 +35,17 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.junit.jupiter</groupId>
-			<artifactId>junit-jupiter-engine</artifactId>
-			<version>5.9.2</version>
-			<scope>test</scope>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-openfeign</artifactId>
+			<version>4.0.3</version>
 		</dependency>
+
+		<dependency>
+			<groupId>com.storage</groupId>
+			<artifactId>storage-demo</artifactId>
+			<version>0.0.2-20230824.174336-1</version>
+		</dependency>
+
 		<dependency>
 			<groupId>com.vmware.test-operations</groupId>
 			<artifactId>test-operations</artifactId>
@@ -68,20 +69,12 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-security</artifactId>
-			<version>3.0.4</version>
 		</dependency>
 		<dependency>
 			<groupId>org.liquibase</groupId>
 			<artifactId>liquibase-core</artifactId>
 			<version>4.20.0</version>
 		</dependency>
-
-		<dependency>
-			<groupId>org.yaml</groupId>
-			<artifactId>snakeyaml</artifactId>
-			<version>2.0</version>
-		</dependency>
-
 		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-core</artifactId>
@@ -96,11 +89,6 @@
 			<artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>org.springframework.cloud</groupId>
-			<artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
-			<version>4.0.2</version>
-		</dependency>
-		<dependency>
 			<groupId>org.springframework.kafka</groupId>
 			<artifactId>spring-kafka</artifactId>
 		</dependency>
@@ -110,19 +98,56 @@
 			<version>24.0.1</version>
 			<scope>compile</scope>
 		</dependency>
+
+		<dependency>
+			<groupId>org.testcontainers</groupId>
+			<artifactId>junit-jupiter</artifactId>
+			<version>1.19.0</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.testcontainers</groupId>
+			<artifactId>postgresql</artifactId>
+			<version>1.19.0</version>
+			<scope>test</scope>
+		</dependency>
+
+
 		<dependency>
 			<groupId>io.jsonwebtoken</groupId>
 			<artifactId>jjwt</artifactId>
 			<version>0.9.1</version>
 		</dependency>
 		<dependency>
+			<groupId>org.json</groupId>
+			<artifactId>json</artifactId>
+			<version>20230227</version>
+		</dependency>
+		<dependency>
+			<groupId>commons-fileupload</groupId>
+			<artifactId>commons-fileupload</artifactId>
+			<version>1.5</version>
+		</dependency>
+		<dependency>
 		<groupId>org.springframework.security</groupId>
 		<artifactId>spring-security-jwt</artifactId>
 		<version>1.1.1.RELEASE</version>
 	</dependency>
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<optional>true</optional>
+		</dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-test</artifactId>
+            <version>2.7.13</version>
+            <scope>test</scope>
+        </dependency>
 
 	</dependencies>
 	<dependencyManagement>
+
 		<dependencies>
 			<dependency>
 				<groupId>org.springframework.cloud</groupId>
@@ -131,18 +156,44 @@
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
+			<dependency>
+				<groupId>org.sonatype.plugins</groupId>
+				<artifactId>nexus-staging-maven-plugin</artifactId>
+				<version>1.6.13</version>
+			</dependency>
 		</dependencies>
 	</dependencyManagement>
 
 	<build>
 		<plugins>
 			<plugin>
+				<groupId>org.sonatype.plugins</groupId>
+				<artifactId>nexus-staging-maven-plugin</artifactId>
+				<version>1.6.13</version>
+				<executions>
+					<execution>
+						<id>default-deploy</id>
+						<phase>deploy</phase>
+						<goals>
+							<goal>deploy</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<serverId>nexus</serverId>
+					<nexusUrl>http://5.63.154.191:8081/</nexusUrl>
+					<skipStaging>true</skipStaging>
+				</configuration>
+			</plugin>
+
+			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<configuration>
+			<!--		 <mainClass>com.user.UserMicroserviceApplication.java</mainClass> -->
 					<excludes>
 						<exclude>
-							<groupId>org.projectlombok</groupId>
+							<groupId>org.project-lombok</groupId>
 							<artifactId>lombok</artifactId>
 						</exclude>
 					</excludes>
@@ -150,5 +201,43 @@
 			</plugin>
 		</plugins>
 	</build>
+
+	<repositories>
+		<repository>
+			<id>nexus-releases</id>
+			<name>nexus-releases</name>
+			<url>http://5.63.154.191:8081/repository/maven-releases/</url>
+		</repository>
+		<repository>
+			<id>nexus-snapshots</id>
+			<name>nexus-snapshots</name>
+			<url>http://5.63.154.191:8081/repository/maven-snapshots/</url>
+			<snapshots>
+				<enabled>true</enabled>
+				<updatePolicy>always</updatePolicy>
+			</snapshots>
+			<releases>
+				<enabled>false</enabled>
+			</releases>
+		</repository>
+		<repository>
+			<id>storage</id>
+			<url>http://5.63.154.191:8081/repository/storage/</url>
+		</repository>
+	</repositories>
+
+
+	<distributionManagement>
+		<repository>
+			<id>nexus-releases</id>
+			<name>nexus-releases</name>
+			<url>http://5.63.154.191:8081/repository/maven-releases/</url>
+		</repository>
+		<snapshotRepository>
+			<id>nexus-snapshots</id>
+			<name>nexus-snapshots</name>
+			<url>http://5.63.154.191:8081/repository/maven-snapshots/</url>
+		</snapshotRepository>
+	</distributionManagement>
 
 </project>

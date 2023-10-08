@@ -1,0 +1,2 @@
+mvn clean deploy -Dmaven.test.skip=true -Dmaven.plugin.validation=brief -e -X
+update all snapshots mvn install -U

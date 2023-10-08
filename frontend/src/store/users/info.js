@@ -123,7 +123,6 @@ export default {
       try {
         const response = await posts.get({ accountIds, page, itemPerPage });
         const { content } = response.data;
-
         if (author) dispatch('global/authors/addAuthor', author, { root: true });
 
         const wall = author

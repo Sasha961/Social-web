@@ -18,9 +18,9 @@
     />
 
     <span class="form__error" v-if="v.$dirty && !v.sameAsPassword">Пароли должны совпадать</span>
-
+    <br>
     <span class="form__error" v-if="v.$dirty && !v.minLength">
-      Пароль должен быть не менее {{ v.$params.minLength.min }} символов. Сейчас он
+      Пароль должен быть не менее {{ v.$params.minLength.min }} символов.<br> Сейчас он
       {{ password.length }}
     </span>
   </div>

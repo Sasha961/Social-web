@@ -1,6 +1,6 @@
-com\friends\demo\repository\UserRepositoryTest.class
-com\friends\demo\repository\HistoryRepositoryTest.class
-com\friends\demo\repository\FriendRepositoryTest.class
-com\friends\demo\service\FriendsServiceTest.class
-com\friends\demo\database\BuildingPostgresqlContainer.class
-com\friends\demo\repository\StatusRepositoryTest.class
+ru\skillbox\group39\friends\repository\UserRepositoryTest.class
+ru\skillbox\group39\friends\repository\StatusRepositoryTest.class
+ru\skillbox\group39\friends\service\FriendsServiceTest.class
+ru\skillbox\group39\friends\security\SecurityTest.class
+ru\skillbox\group39\friends\database\BuildingPostgresqlContainer.class
+ru\skillbox\group39\friends\controller\FriendControllerTest.class

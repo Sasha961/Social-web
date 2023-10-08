@@ -1,6 +1,6 @@
 <template>
   <div class="form-layout__footer">
-    <a href="#" class="form-layout__footer-support">Поддержка</a>
+    <a href="#" class="form-layout__footer-support">Поддержка/Support</a>
 
     <div class="form-layout__footer-language">
       <span>Язык:</span>

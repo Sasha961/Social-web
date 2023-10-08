@@ -8,52 +8,67 @@
       <password-field id="login-password" v-model="password" :v="$v.password" />
 
       <div class="login__action">
-        <button-hover type="submit" tag="button" variant="white"> Войти </button-hover>
-        <router-link class="login__link" :to="{ name: 'Forgot' }"> Забыли пароль? </router-link>
+        <button-hover
+          type="submit"
+          tag="button"
+          variant="white"
+          spinnerColor="#21a45d"
+          :showSpinner="authStatus === 'loading'"
+        >
+          Войти
+        </button-hover>
+        <router-link class="login__link" :to="{ name: 'Forgot' }">
+          Забыли пароль?
+        </router-link>
       </div>
     </form>
+
   </div>
 </template>
 
 <script>
-import { mapActions } from 'vuex';
-import { required, email, minLength } from 'vuelidate/lib/validators';
-import PasswordField from '@/components/FormElements/PasswordField';
-import EmailField from '@/components/FormElements/EmailField';
+import { mapActions, mapGetters } from "vuex";
+import { required, email, minLength } from "vuelidate/lib/validators";
+import PasswordField from "@/components/FormElements/PasswordField";
+import EmailField from "@/components/FormElements/EmailField";
+import ButtonHover from "@/components/ButtonHover";
 
 export default {
-  name: 'Login',
+  name: "Login",
   components: {
     PasswordField,
     EmailField,
+    ButtonHover,
   },
 
   data: () => ({
-    email: '',
-    password: '',
+    email: "",
+    password: "",
   }),
 
   computed: {
+    ...mapGetters("auth/api", ["authStatus"]),
     redirectUrl() {
-      return this.$route.query.redirect || 'News';
+      return this.$route.query.redirect || "News";
     },
   },
-
   methods: {
-    ...mapActions('auth/api', ['login']),
-    ...mapActions('profile/info', ['apiInfo']),
+    ...mapActions("auth/api", ["login"]),
+    ...mapActions("profile/info", ["apiInfo"]),
 
-    submitHandler() {
+    async submitHandler() {
       if (this.$v.$invalid) {
         this.$v.$touch();
         return;
       }
-
-      this.login({ email: this.email, password: this.password }).then(() => {
-        this.apiInfo().then(() => {
-          this.$router.push({ name: this.redirectUrl });
-        });
-      });
+      try {
+        this.isLoading = true;
+        await this.login({ email: this.email, password: this.password });
+        await this.apiInfo();
+        this.$router.push({ name: this.redirectUrl });
+      } catch (err) {
+        console.dir(err);
+      }
     },
   },
 
@@ -78,16 +93,27 @@ export default {
 
 .login__action
   display flex
+  flex-wrap wrap
+  gap 30px
   align-items center
+  justify-content center
   margin-top 50px
 
 .login__link
+  position relative
   font-size 13px
   color rgba(255, 255, 255, 0.5)
-  margin-left 30px
   white-space nowrap
   transition all 0.2s
-
+  &::before
+    position: absolute
+    content: ''
+    bottom -1px
+    width: 100%
+    border-bottom: 1px solid transparent
+    transition border-bottom-color 0.2s ease
+  &:focus-visible::before
+    border-bottom-color #fff
   &:hover
     color #fff
 </style>

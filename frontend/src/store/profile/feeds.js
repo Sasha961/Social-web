@@ -61,7 +61,6 @@ export default {
       try {
         const response = await posts.getFeeds(payload);
         const { content } = response.data;
-
         const feeds = await content.reduce(async (acc, post) => {
           const accumulator = await acc;
           const author = await getAuthor(post.authorId, getters.authors, dispatch);
@@ -71,7 +70,6 @@ export default {
 
           return accumulator;
         }, []);
-
         commit('setFeeds', feeds);
         const pagination = createPagination(response);
         commit('setFeedsPagination', pagination);
@@ -89,21 +87,34 @@ export default {
     },
 
     async actionsFeed({ dispatch, commit, rootGetters }, payload) {
+
       const isPUT = payload.edit && !!payload.edit;
+
       // const publishDate = payload.publishDate ? '?publishDate=' + payload.publishDate : '';
       const data = {
         title: payload.title,
         postText: payload.postText,
         publishDate: payload.publishDate,
-        tags: payload.tags.map(tag => ({ name: tag })),
+        // tags: payload.tags.map(tag => ({ name: tag })),
         imagePath: payload.imagePath,
         id: payload.postId,
       };
 
       if (isPUT) {
-        await posts.push(data, isPUT);
+        try {
+          const res = await posts.push(data, isPUT);
+          console.dir(res)
+        } catch(err) {
+          console.dir(err)
+        }
+
       } else {
-        await posts.push(data, isPUT, payload.postId);
+        try {
+          const res = await posts.push(data, isPUT, payload.postId);
+          console.dir(res)
+        } catch(err) {
+          console.dir(err)
+        }
       }
 
       // await posts.push(data, isPUT, payload.postId);
@@ -121,7 +132,6 @@ export default {
       } else {
         if (isPUT) commit('users/info/putPost', payload, { root: true });
         else {
-          console.log(rootGetters['profile/info/getInfo']);
           commit('users/info/clearWall', null, { root: true });
           dispatch(
             'users/info/apiWall',

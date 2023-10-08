@@ -1,5 +1,9 @@
 package com.user.model;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import com.user.dto.account.AccountDto;
 import com.user.dto.account.StatusCodeType;
 import com.user.dto.secure.AccountSecureDto;
@@ -13,18 +17,14 @@ import java.time.LocalDateTime;
 @Table(name = "users")
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 @JsonIgnoreProperties(ignoreUnknown = true)
+
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
-    public User(AccountSecureDto accountSecureDto) {
-        this.firstName = accountSecureDto.getFirstName();
-        this.lastName = accountSecureDto.getLastName();
-        this.email = accountSecureDto.getEmail();
-        this.password = accountSecureDto.getPassword();
-    }
 
     Boolean isDeleted;
     String firstName;
@@ -41,16 +41,28 @@ public class User {
     String about;
     String city;
     String country;
+    String gender;
     StatusCodeType statusCode;
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     LocalDateTime regDate;
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     LocalDateTime birthDate;
     String messagePermission;
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     LocalDateTime lastOnlineTime;
     Boolean isOnline;
     Boolean isBlocked;
     String emojiStatus;
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     LocalDateTime createdOn;
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     LocalDateTime updatedOn;
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     LocalDateTime deletionDate;
-
 }

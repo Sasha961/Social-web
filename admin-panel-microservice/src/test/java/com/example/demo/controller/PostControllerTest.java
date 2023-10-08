@@ -1,8 +1,6 @@
 package com.example.demo.controller;
 
-import com.example.demo.controller.feignClient.ControllerFromPosts;
-import com.example.demo.dto.comment.Comment;
-import com.example.demo.dto.comment.CommentTypeEnum;
+import com.example.demo.controller.feignClient.PostsControllerFeign;
 import com.example.demo.dto.post.Post;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +29,7 @@ public class PostControllerTest {
     private MockMvc mockMvc;
 
     @MockBean
-    private ControllerFromPosts controllerFromPosts;
+    private PostsControllerFeign controllerFromPosts;
 
     @Test
     @WithMockUser(username = "admin", roles = "ADMIN")

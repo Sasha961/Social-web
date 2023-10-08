@@ -70,7 +70,7 @@ export default {
         if (response.data?.data?.length === 0) return;
 
         const dialogs = [];
-        const { data } = response.data;
+        const data = response.data.content;
         data.forEach((d) => {
           const conversationPartnerId = d.conversationPartner.id;
           const newDialog = {
@@ -93,7 +93,7 @@ export default {
 
     async apiUnreadedMessages({ commit }) {
       const response = await dialogsApi.unreadedMessages();
-      const { count } = response.data.data;
+      const {count} = response.data;
       commit('setUnreadedMessages', count);
     },
 

@@ -18,5 +18,5 @@ const routes = [
 ].concat(authRoutes, shiftRoutes, userRoutes, adminRoutes);
 export default new Router({
   routes,
-  mode: 'history',
+  mode: 'hash',
 });

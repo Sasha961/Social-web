@@ -263,7 +263,6 @@ export default {
     },
 
     subscribe(id) {
-      console.log('subscribe', this.info.statusCode);
       if (this.info.statusCode === 'WATCHING') {
         this.$store.dispatch('global/alert/setAlert', {
           status: 'action',

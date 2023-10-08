@@ -33,7 +33,6 @@
 
         <div class="profile__news-list">
           <error-block v-if="!loading && error" :message="errorMessage" />
-
           <news-block
             edit="edit"
             deleted="deleted"

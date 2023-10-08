@@ -15,11 +15,11 @@
         />
       </form>
 
-      <div class="main-layout__push" @click="togglePush">
+      <a class="bell-box main-layout__push" @click="redirect">
+        <div class="bell-box__count">{{ getNotificationsLength }}</div>
         <push-icon :isNotEmpty="getNotificationsLength > 0" />
 
-        <push :isOpen="isOpenPush" @close-push="togglePush" />
-      </div>
+      </a>
     </template>
 
     <router-link class="main-layout__user" v-if="getInfo" :to="{ name: 'Profile' }">
@@ -46,15 +46,10 @@
 import { mapGetters, mapMutations, mapActions, mapState } from 'vuex';
 import SearchIcon from '../../Icons/SearchIcon.vue';
 import PushIcon from '../../Icons/PushIcon.vue';
-import Push from '@/components/MainLayout/Push';
+
 export default {
   name: 'MainLayoutHeader',
-  components: { Push, SearchIcon, PushIcon },
-
-  data: () => ({
-    isOpenPush: false,
-  }),
-
+  components: { SearchIcon, PushIcon },
   computed: {
     ...mapState('profile/dialogs', ['dialogs', 'newMessage']),
     ...mapGetters('global/search', ['searchText']),
@@ -67,7 +62,6 @@ export default {
       return this.$route.params.activeDialogId;
     },
   },
-
   watch: {
     dialogs(value) {
       let unreadCount = 0;
@@ -77,11 +71,9 @@ export default {
       this.setUnreadedMessages(unreadCount);
     },
   },
-
   created() {
     if (this.$route.name !== 'Im' && this.$route.name !== 'ImChat') this.fetchDialogs();
   },
-
   async mounted() {
     this.apiGeo();
     if (!this.getInfo) this.apiInfo();
@@ -95,7 +87,6 @@ export default {
           this.addNotificationsLength(messagePayload.data);
         }
       }
-
       if (messagePayload.type === 'MESSAGE') {
         if (
           this.$route.name === 'ImChat' &&
@@ -119,7 +110,6 @@ export default {
       }
     });
   },
-
   methods: {
     ...mapMutations('global/search', ['setSearchText']),
     ...mapActions('profile/dialogs', ['fetchDialogs']),
@@ -134,10 +124,10 @@ export default {
         this.$router.push({ name: 'Search', query: { text: this.searchText } });
       });
     },
-
-    togglePush() {
-      this.isOpenPush = !this.isOpenPush;
-    },
+    redirect() {
+      // if (this.getNotificationsLength) this.$router.push({ name: 'Push' });
+      this.$router.push({ name: 'Push' })
+    }
   },
 };
 </script>

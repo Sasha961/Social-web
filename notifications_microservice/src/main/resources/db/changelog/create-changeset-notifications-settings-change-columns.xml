@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+        xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd
+        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
+        http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-latest.xsd">
+
+    <changeSet id="1688797489871-2" author="Artem">
+        <sql>
+            SET timezone = 'Europe/Moscow';
+        </sql>
+        <renameColumn tableName="notifications_settings" oldColumnName="enable_like" newColumnName="LIKE"/>
+        <renameColumn tableName="notifications_settings" oldColumnName="enable_post" newColumnName="POST"/>
+        <renameColumn tableName="notifications_settings" oldColumnName="enable_comment" newColumnName="COMMENT"/>
+        <renameColumn tableName="notifications_settings" oldColumnName="enable_message" newColumnName="MESSAGE"/>
+        <renameColumn tableName="notifications_settings" oldColumnName="enable_friend_request" newColumnName="FRIEND_REQUEST"/>
+        <renameColumn tableName="notifications_settings" oldColumnName="enable_friend_birthday" newColumnName="FRIEND_BIRTHDAY"/>
+        <renameColumn tableName="notifications_settings" oldColumnName="enable_send_email_message" newColumnName="SEND_EMAIL_MESSAGE"/>
+    </changeSet>
+</databaseChangeLog>

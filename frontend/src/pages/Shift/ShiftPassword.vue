@@ -140,12 +140,4 @@ export default {
 
 .img_captcha
   margin-bottom 15px
-
-.btn__update
-  margin-bottom 15px
-  width 90px
-  height 30px
-  padding 1px
-  background-color white
-  color #21a45d
 </style>

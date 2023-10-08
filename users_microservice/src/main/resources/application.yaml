@@ -13,13 +13,19 @@ spring.datasource:
   username: selectel
   password: selectel
 
+gtw:
+  ADMIN-PANEL: http://${eureka.instance.hostname}:8088/admin-panel
+
+
+
 spring:
   application:
-    name: users_ms
+    name: users
   datasource:
     spring.jpa.database-platform: org.hibernate.dialect.PostgreSQLDialect
   liquibase:
     change-log: classpath:db/changelog/db.changelog-master.xml
+
 
 liquibase:
   enabled: true
@@ -32,7 +38,6 @@ eureka:
     fetch-registry: true
     service-url:
       defaultZone: http://5.63.154.191:8087/eureka
-
   instance:
     hostname: 5.63.154.191
 
@@ -67,6 +72,15 @@ kafka:
     key-serializer: org.apache.kafka.common.serialization.StringSerializer
     # Очередь для исключений
     value-serializer: org.apache.kafka.common.serialization.StringSerializer
+    spring:
+      kafka:
+        producer:
+          properties:
+            spring:
+              json:
+                add:
+                  type:
+                    headers: false
     retries: 2
 
   #    jaas:
@@ -85,3 +99,9 @@ kafka:
     notify: notify-topic
     friends: friends-topic
     admin: admin-topic
+
+logging:
+  level:
+    org.apache.kafka.clients.producer.ProducerConfig: WARN
+    org.apache.kafka.clients.consumer.ConsumerConfig: WARN
+    org.apache.kafka.clients.clients.Metadata: WARN

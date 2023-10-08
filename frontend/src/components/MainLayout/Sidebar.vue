@@ -6,7 +6,6 @@
         <simple-svg :filepath="'/static/img/logo-admin.svg'" />
       </div>
     </div>
-
     <nav class="main-layout__nav">
       <router-link
         :title="item.text"
@@ -20,13 +19,7 @@
             item.link.name === 'Im' || (item.link.name === 'Friends' && requestsCount),
           big: unreadedMessages >= 100,
         }"
-        :data-push="
-          item.link.name === 'Im'
-            ? unreadedMessages
-            : item.link.name === 'Friends'
-            ? requestsCount
-            : false
-        "
+        :data-push="item.link.name === 'Im' ? unreadedMessages : item.link.name === 'Friends' ? requestsCount: false"
       >
         <div class="simple-svg-wrapper">
           <sidebar-icons :name="item.icon" />

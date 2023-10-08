@@ -4,57 +4,79 @@
       <router-view />
     </component>
   </div>
+  <!-- <div id="app" >
+    <component :is="layout" v-if="$route.meta.layout" style="display: none;">
+      <router-view />
+    </component>
+    <settings />
+  </div> -->
+
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapGetters } from "vuex";
 
 export default {
-  name: 'App',
+  name: "App",
   components: {
-    FormLayout: () => import('@/layouts/FormLayout'),
-    MainLayout: () => import('@/layouts/MainLayout'),
-    EmptyLayout: () => import('@/layouts/EmptyLayout'),
+    FormLayout: () => import("@/layouts/FormLayout"),
+    MainLayout: () => import("@/layouts/MainLayout"),
+    EmptyLayout: () => import("@/layouts/EmptyLayout"),
+    Settings: () => import('@/pages/User/Settings')
   },
+
   computed: {
-    ...mapGetters('global/alert', ['getState']),
+    ...mapGetters("global/alert", ["getState"]),
     alert() {
       return this.$store.state.global.alert;
     },
     layout() {
-      return this.$route.meta.layout + '-layout';
+      return this.$route.meta.layout + "-layout";
     },
   },
-
   watch: {
-    'alert.show'(value) {
+    "alert.show"(value) {
       if (!value) {
         return;
       }
 
-      if (this.$store.state.global.alert.status === 'success') {
+      if (this.$store.state.global.alert.status === "success") {
         this.$vToastify.success(this.$store.state.global.alert.text);
         return;
       }
 
-      if (this.$store.state.global.alert.status === 'response') {
-        this.$vToastify.success(this.$store.state.global.alert.text, 'Ответ запроса');
+      if (this.$store.state.global.alert.status === "response") {
+        this.$vToastify.success(this.$store.state.global.alert.text, "Ответ запроса");
         return;
       }
 
-      if (this.$store.state.global.alert.status === 'action') {
-        this.$vToastify.success(this.$store.state.global.alert.text, 'Действие невозможно');
+      if (this.$store.state.global.alert.status === "action") {
+        this.$vToastify.success(
+          this.$store.state.global.alert.text,
+          "Действие невозможно"
+        );
         return;
       }
 
-      if (this.$store.state.global.alert.status === 'validation') {
-        this.$vToastify.success(this.$store.state.global.alert.text, 'Неверные параметры');
+      if (this.$store.state.global.alert.status === "validation") {
+        this.$vToastify.success(
+          this.$store.state.global.alert.text,
+          "Неверные параметры"
+        );
         return;
       }
 
-      this.$vToastify.error(this.$store.state.global.alert.text, 'Ошибка');
+      this.$vToastify.error(this.$store.state.global.alert.text, "Ошибка");
       return;
     },
+  },
+  async mounted() {
+    // try {
+    //   const res = await axios.get('/friends')
+    //   console.log(res)
+    // } catch(err) {
+    //   console.dir(err)
+    // }
   },
 };
 </script>
@@ -71,7 +93,7 @@ export default {
 </style>
 
 <style lang="css">
-@import '../public/css/style.min.css';
+@import "../public/css/style.min.css";
 
 ::-webkit-scrollbar {
   width: 3px;

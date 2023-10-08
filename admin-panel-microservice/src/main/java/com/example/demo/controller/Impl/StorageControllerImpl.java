@@ -21,7 +21,7 @@ public class StorageControllerImpl implements StorageController {
     private final StorageService storageService;
 
     @Override
-    public StorageDto storage(@RequestParam(required = false) MultipartFile file) throws Exception {
+    public StorageDto storage(@RequestPart(required = false) MultipartFile file) throws Exception {
         return storageService.downloadFile(file);
     }
 }

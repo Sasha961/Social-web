@@ -32,11 +32,7 @@ build/
 ### VS Code ###
 .vscode/
 /src/main/resources/secrets.properties
-C:\java\javapro_team39\auth_microservice\deploy.md
-C:/java/javapro_team39/auth_microservice/deploy.md
 /.mvn/
-/jwt-how-to/
-/deploiment-artefacts-to-nexus/
-/build-and-run-app-in-Docker/
-/kafka-installation/
 /draft/
+/htmlReport/
+/src/main/java/ru/skillbox/group39/socialnetwork/authorization/security/testJwt/

@@ -1,0 +1,132 @@
+server:
+  port: '8089'
+  remote:
+    address: 5.63.154.191
+spring:
+  application:
+    name: posts
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    username: selectel
+    url: jdbc:postgresql://5.63.154.191:5432/posts
+    password: selectel
+
+  liquibase:
+    enabled: 'true'
+    change-log: classpath:/db/changelog/changelog-master.xml
+  jpa:
+    hibernate:
+      ddl-auto: none
+
+gtw:
+  ADMIN-PANEL: http://${eureka.instance.hostname}:8088/admin-panel
+
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://5.63.154.191:8087/eureka
+  instance:
+    hostname: 5.63.154.191
+
+#defer-datasource-initialization: 'true'
+
+#jwt:
+#  lifetime: '3600000'
+#  secret: aXH6JwuebH3qnxLVWQMXxHHg8euc7pkZ246yUJsMFsLHGGhXzCdanoV3HNiTgZf7
+#security:
+#  basic:
+#    enabled: 'false'
+
+#  spring:
+#    datasource:
+#      platform: postgres
+#      driverClassName: org.postgresql.Driver
+#      url: jdbc:postgresql://5.63.154.191:5432/Posts
+#      username: selectel
+#      password: selectel
+
+#    datasource:
+#      driver-class-name: org.h2.Driver
+#      username: sa
+#      url: jdbc:h2:file:~/spring-boot-h2-db1
+#      password: password
+#    h2:
+#      console:
+#        enabled: 'true'
+#        path: /h2
+    jpa:
+      database-platform: org.hibernate.dialect.H2Dialect
+      properties:
+        hibernate:
+          format_sql: 'true'
+      hibernate:
+        ddl-auto: none
+      show-sql: 'true'
+
+kafka:
+  consumer-enabled: true
+  bootstrap-servers: ${server.remote.address}:9092,${server.remote.address}:9093
+  properties:
+    #      sasl:
+    #        jaas:
+    #          config: org.apache.kafka.common.security.plain.PlainLoginModule required username=${kafka_username:'admin'} password=${kafka_password:'admin-secret'};
+    #        mechanism: PLAIN
+    security:
+      #        protocol: SASL_PLAINTEXT
+      protocol: PLAINTEXT
+      # Тип, для которого определяем конкретные сериализаторы
+      spring.json.value.default.type: kafka.model.ru.skillbox.socialnetwork.JsonMessage.java
+      spring.deserializer.key.delegate.class: org.apache.kafka.common.serialization.StringDeserializer
+      spring.deserializer.value.delegate.class: org.springframework.kafka.support.serializer.JsonDeserializer
+  consumer:
+    auto-offset-reset: earliest
+    group-id: ${spring.application.name}
+    # Сериализаторы для всех типов
+    key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+    value-deserializer: org.apache.kafka.common.serialization.JsonDeserializer
+    max-poll-records: 1
+    fetch-max-wait: 36000
+    enable-auto-commit: false
+
+  producer:
+    client-id: ${spring.application.name}
+    key-serializer: org.apache.kafka.common.serialization.StringSerializer
+    # Очередь для исключений
+    value-serializer: org.apache.kafka.common.serialization.JsonDeserializer
+    retries: 2
+
+  #    jaas:
+  #      enabled: true
+  listener:
+    poll-timeout: 1800000
+    concurrency: 1
+    # ack-mode: manual_immediate
+    # Получение каждой записи должно быть подтверждено
+    ack-mode: record
+  topics:
+    auth: auth-topic
+    users: users-topic
+    posts: posts-topic
+    msg: msg-topic
+    notify: notify-topic
+    friends: friends-topic
+    admin: admin-topic
+
+logging:
+  level:
+    root: INFO
+    spring.cloud.openfeign: INFO
+    org.springframework: INFO
+    org.apache.kafka: INFO
+    org.springframework.web: INFO
+    org.springframework.cloud: INFO
+    org.springframework.security: INFO
+    com.netflix.eureka: INFO
+    com.netflix.eureka.discovery: INFO
+    org.apache.kafka.clients.consumer.ConsumerConfig: WARN
+    org.apache.kafka.clients.producer.ProducerConfig: WARN
+    org.apache.kafka.clients.consumer.internals.ConsumerCoordinator: WARN
+    org.apache.kafka.clients.Metadata: WARN
+    org.springframework.kafka.listener.KafkaMessageListenerContainer: WARN
